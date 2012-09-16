@@ -1,6 +1,6 @@
-name := "SwingContrib"
+name := "ScalaSwingContrib"
 
-organization := "SwingContrib"
+organization := "ScalaSwingContrib"
 
 version := "1.0"
 

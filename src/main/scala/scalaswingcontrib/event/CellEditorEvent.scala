@@ -1,8 +1,8 @@
-package scala.swing.event
+package scalaswingcontrib
+package event
 
-import scala.swing._
+import scala.swing.event.Event
 
-import javax.swing.event.CellEditorListener
 
 trait CellEditorEvent[A] extends Event {
   val source: CellEditor[A]

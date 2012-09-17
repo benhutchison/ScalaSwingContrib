@@ -1,16 +1,9 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib
 
-package scala.swing
-
-import scala.swing.event._
-import javax.swing.{CellEditor => JCellEditor, AbstractCellEditor => JAbstractCellEditor}
-import javax.swing.event.{CellEditorListener, ChangeEvent}
+import scala.swing.{Component, Publisher}
+import scalaswingcontrib.event.{CellEditingCancelled, CellEditingStopped}
+import javax.{swing => js}
+import javax.swing.{event => jse}
 
 /**
 * Describes the structure of a component's companion object where pluggable cell editors must be supported.
@@ -24,28 +17,28 @@ trait EditableCellsCompanion {
   
 
   trait CellEditorCompanion {
-    type Peer <: JCellEditor
+    type Peer <: js.CellEditor
     type CellInfo
     val emptyCellInfo: CellInfo
     def wrap[A](e: Peer): Editor[A]
     def apply[A, B: Editor](toB: A => B, toA: B => A): Editor[A]
   }
   
-  trait CellEditor[A] extends Publisher with scala.swing.CellEditor[A] {
+  trait CellEditor[A] extends Publisher with scalaswingcontrib.CellEditor[A] {
     val companion: CellEditorCompanion
     def peer: companion.Peer
 
     protected def fireCellEditingCancelled() { publish(CellEditingCancelled(CellEditor.this)) }
     protected def fireCellEditingStopped() { publish(CellEditingStopped(CellEditor.this)) }
 
-    protected def listenToPeer(p: JCellEditor) {
-      p.addCellEditorListener(new CellEditorListener {
-        override def editingCanceled(e: ChangeEvent) { fireCellEditingCancelled() }
-        override def editingStopped(e: ChangeEvent) { fireCellEditingStopped() }
+    protected def listenToPeer(p: js.CellEditor) {
+      p.addCellEditorListener(new jse.CellEditorListener {
+        override def editingCanceled(e: jse.ChangeEvent) { fireCellEditingCancelled() }
+        override def editingStopped(e: jse.ChangeEvent) { fireCellEditingStopped() }
       })
     }
 
-    abstract class EditorPeer extends JAbstractCellEditor {
+    abstract class EditorPeer extends js.AbstractCellEditor {
       override def getCellEditorValue(): AnyRef = value.asInstanceOf[AnyRef]
       listenToPeer(this)
     }

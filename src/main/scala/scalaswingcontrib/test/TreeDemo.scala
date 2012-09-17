@@ -1,17 +1,18 @@
-package scala.swing
+package scalaswingcontrib
 package test
 
-import scala.xml._
-import Swing._
-import swing.event._
-import swing.tree._
-import Tree._
+import scala.xml.{Node, XML}
+import scala.swing.{Button, Label, SimpleSwingApplication, Dimension, Component, 
+                    Action, GridPanel, MainFrame, TabbedPane, BorderPanel, ScrollPane}
+import scala.swing.Swing.{Icon, pair2Dimension}
+import scalaswingcontrib.tree.{Tree, TreeModel, InternalTreeModel, ExternalTreeModel}
+import scalaswingcontrib.event.TreeNodeSelected
 import java.awt.Color
 import java.awt.{event => jae}
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable
+import Tree.{Renderer, Editor}
 
 object TreeDemo extends SimpleSwingApplication {
-  import Tree._
   import java.io._
 
 
@@ -259,7 +260,7 @@ object TreeDemo extends SimpleSwingApplication {
     case class PretendFile(private var nameVar: String, private val childFiles: PretendFile*) {
       var parent: Option[PretendFile] = None
       childFiles foreach {_.parent = Some(this)}
-      private var childBuffer = ListBuffer(childFiles: _*)
+      private var childBuffer = mutable.ListBuffer(childFiles: _*)
       
       override def toString() = name
       def name = nameVar

@@ -1,16 +1,11 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib
 
+import scalaswingcontrib.event.ColorChangeEvent
+import java.awt.Color
+import scala.swing.Component
+import javax.{swing => js}
+import js.{event => jse}
 
-
-package scala.swing
-
-case class ColorChangeEvent( c: Color) extends event.Event
 
 /**
  * Wrapper for JColorChooser.
@@ -19,26 +14,22 @@ case class ColorChangeEvent( c: Color) extends event.Event
  * @see javax.swing.JColorChooser
  */
 object ColorChooser {
-  def showDialog(parent:Component, title:String, color:Color ): scala.Option[Color] = {
-    toOption[Color](javax.swing.JColorChooser.showDialog(parent.peer, title, color))
+  def showDialog(parent: Component, title: String, color: Color ): Option[Color] = {
+    Option(js.JColorChooser.showDialog(parent.peer, title, color))
   }
-  
 }
 
-class ColorChooser( color0: java.awt.Color ) extends Component  {
-  import javax.swing.JColorChooser
+class ColorChooser(initialColor: Color) extends Component {
   
-  def this() = this( java.awt.Color.white )
+  def this() = this(Color.white)
   
-  override lazy val peer:JColorChooser =  new javax.swing.JColorChooser(color0) with SuperMixin
+  override lazy val peer: js.JColorChooser =  new js.JColorChooser(initialColor) with SuperMixin
 
-  peer.getSelectionModel().addChangeListener(new javax.swing.event.ChangeListener {
-    def stateChanged(e: javax.swing.event.ChangeEvent) { 
+  peer.getSelectionModel().addChangeListener(new jse.ChangeListener {
+    def stateChanged(e: jse.ChangeEvent) { 
       publish( new ColorChangeEvent(peer.getColor)) 
     }
   })
-
-  
   
   def color: Color = peer.getColor
   def color_=(c: Color) = peer.setColor(c)

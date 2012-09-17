@@ -1,11 +1,10 @@
-package scala.swing.tree
+package scalaswingcontrib
+package tree
 
 import Tree.Path
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable
 import javax.swing.{tree => jst}
-import javax.swing.event.TreeModelEvent
-import javax.swing.event.TreeModelListener
-import scala.collection.mutable.ArrayBuffer
+import javax.swing.{event => jse}
 
 
 object ExternalTreeModel {
@@ -175,7 +174,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
 
   
   class ExternalTreeModelPeer extends jst.TreeModel {
-    private val treeModelListenerList = ListBuffer[TreeModelListener]()
+    private val treeModelListenerList = mutable.ListBuffer[jse.TreeModelListener]()
 
     def getChildrenOf(parent: Any) = parent match {
       case `hiddenRoot` => roots
@@ -199,13 +198,13 @@ class ExternalTreeModel[A](rootItems: Seq[A],
       otherPeer.treeModelListeners foreach addTreeModelListener
     }
     
-    def treeModelListeners: Seq[TreeModelListener] = treeModelListenerList
+    def treeModelListeners: Seq[jse.TreeModelListener] = treeModelListenerList
     
-    def addTreeModelListener(tml: TreeModelListener) {
+    def addTreeModelListener(tml: jse.TreeModelListener) {
       treeModelListenerList += tml
     }
     
-    def removeTreeModelListener(tml: TreeModelListener) {
+    def removeTreeModelListener(tml: jse.TreeModelListener) {
       treeModelListenerList -= tml
     }
     
@@ -219,7 +218,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
     }
   
     private def createEventWithIndex(parentPath: jst.TreePath, newValue: Any, index: Int) = {
-      new TreeModelEvent(this, parentPath, Array(index), Array(newValue.asInstanceOf[AnyRef]))
+      new jse.TreeModelEvent(this, parentPath, Array(index), Array(newValue.asInstanceOf[AnyRef]))
     }
     
     def fireTreeStructureChanged(parentPath: jst.TreePath, newValue: Any) {

@@ -1,15 +1,6 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
-
-package scala.swing.group
-
-import javax.swing.LayoutStyle.ComponentPlacement
+import javax.swing.{LayoutStyle => jsl}
 
 /** Provides placement constants for a `GroupPanel`.
   * 
@@ -22,7 +13,7 @@ trait Placements {
    * @see javax.swing.LayoutStyle.ComponentPlacement
    */
   protected[Placements] sealed class Placement(
-      private[group] val wrapped: ComponentPlacement)
+      private[group] val wrapped: jsl.ComponentPlacement)
   
   /**
    * Specifies if two components are related or not.
@@ -30,17 +21,17 @@ trait Placements {
    * @see javax.swing.LayoutStyle.ComponentPlacement
    */    
   protected[Placements] final class RelatedOrUnrelated(
-      cp: ComponentPlacement) extends Placement(cp)
+      cp: jsl.ComponentPlacement) extends Placement(cp)
   
   /** Used to request the distance between two visually related components. */
-  final val Related = new RelatedOrUnrelated(ComponentPlacement.RELATED)
+  final val Related = new RelatedOrUnrelated(jsl.ComponentPlacement.RELATED)
   
   /** Used to request the distance between two visually unrelated components. */
-  final val Unrelated = new RelatedOrUnrelated(ComponentPlacement.UNRELATED)
+  final val Unrelated = new RelatedOrUnrelated(jsl.ComponentPlacement.UNRELATED)
   
   /**
    * Used to request the (horizontal) indentation of a component that is 
    * positioned underneath another component.
    */
-  final val Indent = new Placement(ComponentPlacement.INDENT)
+  final val Indent = new Placement(jsl.ComponentPlacement.INDENT)
 }

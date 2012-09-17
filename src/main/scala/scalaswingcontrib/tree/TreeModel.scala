@@ -1,15 +1,8 @@
-package scala.swing
+package scalaswingcontrib
 package tree
 
-import scala.Array.fallbackCanBuildFrom
-import scala.collection.mutable.ListBuffer
-import scala.reflect.ClassManifest
-import scala.swing.tree.Tree.Path
-
-import TreeModel.hiddenRoot
 import Tree.Path
-import javax.swing.event.TreeModelEvent
-import javax.swing.event.TreeModelListener
+import javax.swing.{event => jse}
 import javax.swing.{tree => jst}
 
 object TreeModel {
@@ -32,14 +25,14 @@ trait TreeModel[A] {
   def getChildrenOf(parentPath: Path[A]): Seq[A]
   def getChildPathsOf(parentPath: Path[A]): Seq[Path[A]] = getChildrenOf(parentPath).map(parentPath :+ _)
   def filter(p: A => Boolean): TreeModel[A]
-  def map[B](f: A=>B): TreeModel[B]
-  def foreach[U](f: A=>U): Unit = depthFirstIterator foreach f
+  def map[B](f: A => B): TreeModel[B]
+  def foreach[U](f: A => U): Unit = depthFirstIterator foreach f
   def isExternalModel: Boolean
   def toInternalModel: InternalTreeModel[A]
   
   
-  def pathToTreePath(path: Tree.Path[A]): jst.TreePath
-  def treePathToPath(tp: jst.TreePath): Tree.Path[A]
+  def pathToTreePath(path: Path[A]): jst.TreePath
+  def treePathToPath(tp: jst.TreePath): Path[A]
  
   /**
    * Replace the item at the given path in the tree with a new value. 
@@ -79,7 +72,7 @@ trait TreeModel[A] {
     def pushChildren(path: Path[A]): Unit
     def hasNext = openNodes.nonEmpty
     def next() = if (openNodes.hasNext) {
-      val path = openNodes.next
+      val path: Path[A] = openNodes.next
       pushChildren(path)
       path.last
     }
@@ -87,7 +80,7 @@ trait TreeModel[A] {
   }
   
   def breadthFirstIterator: Iterator[A] = new TreeIterator {
-    override def pushChildren(path: Path[A]) {openNodes ++= getChildPathsOf(path).toIterator}
+    override def pushChildren(path: Path[A]) { openNodes ++= getChildPathsOf(path).toIterator }
   }
   
   def depthFirstIterator: Iterator[A] = new TreeIterator {
@@ -97,7 +90,7 @@ trait TreeModel[A] {
     }
   }
   
-  def size = depthFirstIterator.size
+  def size: Int = depthFirstIterator.size
   
   def unpackNode(node: Any): A = node.asInstanceOf[A]
 }

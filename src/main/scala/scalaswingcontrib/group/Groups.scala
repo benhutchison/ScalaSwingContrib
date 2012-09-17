@@ -1,16 +1,6 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
-
-package scala.swing.group
-
-import javax.swing.GroupLayout
-import javax.swing.GroupLayout._
+import javax.{swing => js}
 
 /** Provides the definitions for parallel and vertical grouping.
   * 
@@ -31,10 +21,10 @@ trait Groups
   }
   
   /** Elements of this type may only appear inside sequential groups. */
-  private[group] type InSequential = InGroup[GroupLayout#SequentialGroup]
+  private[group] type InSequential = InGroup[js.GroupLayout#SequentialGroup]
   
   /** Elements of this type may only appear inside parallel groups. */
-  private[group] type InParallel = InGroup[GroupLayout#ParallelGroup]
+  private[group] type InParallel = InGroup[js.GroupLayout#ParallelGroup]
   
   /**
    * A group of components, either parallel or sequential.
@@ -74,7 +64,7 @@ trait Groups
    */
   protected class GroupInSequential(wrapped: Group, 
       useAsBaseline: Option[Boolean]) extends InSequential {
-    override private[group] def build(parent: GroupLayout#SequentialGroup) =
+    override private[group] def build(parent: js.GroupLayout#SequentialGroup) =
       if (useAsBaseline.isDefined) parent.addGroup(useAsBaseline.get, wrapped.buildChildren)
       else parent.addGroup(wrapped.buildChildren)
     
@@ -95,7 +85,7 @@ trait Groups
    * @see javax.swing.GroupLayout.ParallelGroup
    */
   protected class GroupInParallel(wrapped: Group, align: Option[Alignment]) extends InParallel {
-    override private[group] def build(parent: GroupLayout#ParallelGroup) =
+    override private[group] def build(parent: js.GroupLayout#ParallelGroup) =
       if (align.isDefined) parent.addGroup(align.get.wrapped, wrapped.buildChildren)
       else parent.addGroup(wrapped.buildChildren)
     

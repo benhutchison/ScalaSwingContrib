@@ -1,19 +1,7 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
-
-package scala.swing.group
-
-import swing._
-import javax.swing.GroupLayout
-import javax.swing.LayoutStyle
-import javax.swing.LayoutStyle.ComponentPlacement
-import javax.swing.SwingConstants
+import scala.swing.Component
+import javax.{swing => js}
 
 /** Provides several declarative means for manual spacing of components in 
   * a `GroupPanel`.
@@ -83,7 +71,7 @@ trait Gaps extends SizeTypes { this: GroupPanel =>
      * @see GroupLayout.Group#addContainerGap()
      */
     def apply() = new InSequential {
-      override private[group] def build(parent: GroupLayout#SequentialGroup) = 
+      override private[group] def build(parent: js.GroupLayout#SequentialGroup) = 
         parent.addContainerGap()
     }
     
@@ -96,7 +84,7 @@ trait Gaps extends SizeTypes { this: GroupPanel =>
      * @see GroupLayout.Group#addContainerGap(int, int)
      */
     def apply(pref: PreferredGapSize, max: Size) = new InSequential {
-        override private[group] def build(parent: GroupLayout#SequentialGroup) = 
+        override private[group] def build(parent: js.GroupLayout#SequentialGroup) = 
           parent.addContainerGap(pref.pixels, max.pixels)
       }
   }
@@ -130,7 +118,7 @@ trait Gaps extends SizeTypes { this: GroupPanel =>
      * @see GroupLayout.Group#addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement)
      */
     def apply(relationship: RelatedOrUnrelated) = new InSequential {
-      override private[group] def build(parent: GroupLayout#SequentialGroup) =
+      override private[group] def build(parent: js.GroupLayout#SequentialGroup) =
         parent.addPreferredGap(relationship.wrapped)
     }
     
@@ -147,7 +135,7 @@ trait Gaps extends SizeTypes { this: GroupPanel =>
      */
     def apply(relationship: RelatedOrUnrelated, preferred: PreferredGapSize, max: Size) = 
         new InSequential {
-      override private[group] def build(parent: GroupLayout#SequentialGroup) =
+      override private[group] def build(parent: js.GroupLayout#SequentialGroup) =
         parent.addPreferredGap(relationship.wrapped, preferred.pixels, max.pixels)
     }
     
@@ -163,7 +151,7 @@ trait Gaps extends SizeTypes { this: GroupPanel =>
      */
     def apply(comp1: Component, comp2: Component, relationship: Placement) = 
         new InSequential {
-      override private[group] def build(parent: GroupLayout#SequentialGroup) =
+      override private[group] def build(parent: js.GroupLayout#SequentialGroup) =
         parent.addPreferredGap(comp1.peer, comp2.peer, relationship.wrapped)
     }
     
@@ -182,7 +170,7 @@ trait Gaps extends SizeTypes { this: GroupPanel =>
      */
     def apply(comp1: Component, comp2: Component, relationship: Placement,
         preferred: PreferredGapSize, max: PreferredGapSize) = new InSequential {
-      override private[group] def build(parent: GroupLayout#SequentialGroup) =
+      override private[group] def build(parent: js.GroupLayout#SequentialGroup) =
         parent.addPreferredGap(comp1.peer, comp2.peer, relationship.wrapped,
                                preferred.pixels, max.pixels)
     }

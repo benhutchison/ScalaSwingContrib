@@ -1,24 +1,14 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
-
-package scala.swing.group
-
-import swing._
-import javax.swing.GroupLayout
-import javax.swing.SwingConstants
+import scala.swing.Component
+import javax.{swing => js}
 
 /** Several methods that delegate directly to the underlying `GroupLayout`.
   *  
   * @author Andreas Flierl
   */
 trait Delegations {
-  val layout: GroupLayout
+  val layout: js.GroupLayout
   
   /**
    * The component will not take up any space when it's invisible (default).
@@ -45,7 +35,7 @@ trait Delegations {
    * @param comps the components to link
    */
   def linkHorizontalSize(comps: Component*) =
-    layout.linkSize(SwingConstants.HORIZONTAL, comps.map(_.peer): _*)
+    layout.linkSize(js.SwingConstants.HORIZONTAL, comps.map(_.peer): _*)
     
   /**
    * Links the sizes of several components vertically.
@@ -53,7 +43,7 @@ trait Delegations {
    * @param comps the components to link
    */
   def linkVerticalSize(comps: Component*) =
-    layout.linkSize(SwingConstants.VERTICAL, comps.map(_.peer): _*)
+    layout.linkSize(js.SwingConstants.VERTICAL, comps.map(_.peer): _*)
   
   /**
    * Replaces one component with another. Great for dynamic layouts.

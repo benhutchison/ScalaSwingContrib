@@ -1,16 +1,7 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib
 
-
-
-package scala.swing
-
-import javax.swing.JPopupMenu
+import javax.{swing => js}
+import scala.swing.{Component, SequentialContainer}
 
 object PopupMenu {
   private[PopupMenu] trait JPopupMenuMixin { def popupMenuWrapper: PopupMenu }
@@ -43,7 +34,7 @@ object PopupMenu {
  */
 class PopupMenu extends Component with SequentialContainer.Wrapper {
 
-  override lazy val peer: JPopupMenu = new JPopupMenu with PopupMenu.JPopupMenuMixin with SuperMixin {
+  override lazy val peer: js.JPopupMenu = new js.JPopupMenu with PopupMenu.JPopupMenuMixin with SuperMixin {
     def popupMenuWrapper = PopupMenu.this
   }
 

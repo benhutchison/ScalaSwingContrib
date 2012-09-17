@@ -1,16 +1,7 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
-
-package scala.swing.group
-
-import swing._
-import javax.swing.GroupLayout
+import scala.swing.Component
+import javax.{swing => js}
 
 /** Provides an implicit conversion and wrappers so that arbitrary Swing 
   * components may be placed inside a `GroupPanel` but still be checked for
@@ -102,9 +93,9 @@ trait ComponentsInGroups extends SizeTypes { this: GroupPanel =>
    */ 
   protected class ComponentInSequential(comp: Component, 
       sizes: Option[Sizes], useAsBaseline: Boolean) 
-      extends InSequential with SizeHelpers[GroupLayout#SequentialGroup] {
+      extends InSequential with SizeHelpers[js.GroupLayout#SequentialGroup] {
  
-    override private[group] def build(parent: GroupLayout#SequentialGroup) =
+    override private[group] def build(parent: js.GroupLayout#SequentialGroup) =
       if (sizes.isDefined) 
         parent.addComponent(useAsBaseline, comp.peer, sizes.get.min.pixels, 
             sizes.get.pref.pixels, sizes.get.max.pixels)
@@ -128,9 +119,9 @@ trait ComponentsInGroups extends SizeTypes { this: GroupPanel =>
    */ 
   protected class ComponentInParallel(comp: Component,
       sizes: Option[Sizes], align: Alignment) 
-      extends InParallel with SizeHelpers[GroupLayout#ParallelGroup] {
+      extends InParallel with SizeHelpers[js.GroupLayout#ParallelGroup] {
     
-    override private[group] def build(parent: GroupLayout#ParallelGroup) =
+    override private[group] def build(parent: js.GroupLayout#ParallelGroup) =
       if (sizes.isDefined)
         parent.addComponent(comp.peer, align.wrapped, sizes.get.min.pixels, 
             sizes.get.pref.pixels, sizes.get.max.pixels)

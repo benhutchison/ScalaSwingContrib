@@ -1,7 +1,7 @@
-package scala.swing.test.group
+package scalaswingcontrib.test.group
 
-import scala.swing._
-import scala.swing.group.GroupPanel
+import scalaswingcontrib.group.GroupPanel
+import scala.swing.{Button, SimpleSwingApplication, MainFrame, CheckBox, TextField, Label}
 
 object GroupLayoutDemo extends SimpleSwingApplication {
   override def top = new MainFrame {

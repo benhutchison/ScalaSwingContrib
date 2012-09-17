@@ -1,15 +1,6 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
-
-package scala.swing.group
-
-import javax.swing.GroupLayout
+import javax.{swing => js}
 
 /** Provides alignment constants for parallel groups in a `GroupPanel`.
   * 
@@ -21,17 +12,17 @@ trait Alignments {
    * 
    * @see javax.swing.GroupLayout.Alignment
    */
-  protected final class Alignment(private[group] val wrapped: GroupLayout.Alignment)
+  protected final class Alignment(private[group] val wrapped: js.GroupLayout.Alignment)
   
   /** Elements are aligned along their baseline. Only valid along the vertical axis. */
-  final val Baseline = new Alignment(GroupLayout.Alignment.BASELINE)
+  final val Baseline = new Alignment(js.GroupLayout.Alignment.BASELINE)
   
   /** Elements are centered inside the group. */
-  final val Center = new Alignment(GroupLayout.Alignment.CENTER)
+  final val Center = new Alignment(js.GroupLayout.Alignment.CENTER)
   
   /** Elements are anchored to the leading edge (origin) of the group. */
-  final val Leading = new Alignment(GroupLayout.Alignment.LEADING)
+  final val Leading = new Alignment(js.GroupLayout.Alignment.LEADING)
   
   /** Elements are anchored to the trailing edge (end) of the group. */
-  final val Trailing = new Alignment(GroupLayout.Alignment.TRAILING)
+  final val Trailing = new Alignment(js.GroupLayout.Alignment.TRAILING)
 }

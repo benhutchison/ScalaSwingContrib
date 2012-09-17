@@ -1,17 +1,11 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib
 
-package scala.swing
-import collection._
+import scala.swing.{Component, Publisher}
+import scala.collection.{mutable, Iterator, Seq}
 
 /**
 * Describes components that have a concept of a "cell", each of which contains a value, may be selected, 
- * and may support pluggable Renderers and Editors.
+* and may support pluggable Renderers and Editors.
 */
 trait CellView[+A] {
   this: Component =>

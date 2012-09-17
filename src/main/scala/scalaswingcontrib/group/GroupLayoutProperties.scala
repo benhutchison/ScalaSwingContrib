@@ -1,22 +1,13 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
-
-package scala.swing.group
-
-import javax.swing.GroupLayout
+import javax.{swing => js}
 
 /** Property wrappers for `GroupLayout`'s setters and getters.
   * 
   * @author Andreas Flierl
   */
 trait GroupLayoutProperties {
-  def layout: GroupLayout
+  def layout: js.GroupLayout
   
   /** Indicates whether gaps between components are automatically created. */
   def autoCreateGaps = layout.getAutoCreateGaps
@@ -41,7 +32,7 @@ trait GroupLayoutProperties {
   def layoutStyle = layout.getLayoutStyle
   
   /** Assigns a layout style to use. */
-  def layoutStyle_=(style: javax.swing.LayoutStyle) = layout.setLayoutStyle(style)
+  def layoutStyle_=(style: js.LayoutStyle) = layout.setLayoutStyle(style)
   
   /** 
    * Indicates whether the visibilty of components is considered for the layout.

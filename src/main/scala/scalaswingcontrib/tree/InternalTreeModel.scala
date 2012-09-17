@@ -1,4 +1,5 @@
-package scala.swing.tree
+package scalaswingcontrib
+package tree
 
 import javax.swing.{tree => jst}
 import Tree.Path

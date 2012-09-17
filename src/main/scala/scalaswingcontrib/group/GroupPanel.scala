@@ -1,18 +1,8 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib.group
 
+import scala.swing.Panel
 
-package scala.swing.group
-
-import swing._
-
-import javax.swing.GroupLayout
-import javax.swing.LayoutStyle.ComponentPlacement
+import javax.{swing => js}
 
 /** A panel that uses [[javax.swing.GroupLayout]] to visually arrange 
   * its components. 
@@ -297,13 +287,13 @@ class GroupPanel extends Panel
                  with Groups
                  with Gaps {
 
-  private[group] type G = GroupLayout#Group
+  private[group] type G = js.GroupLayout#Group
   
   /** The swing `JPanel` wrapped by this `GroupPanel`. */
-  override lazy val peer: javax.swing.JPanel = new javax.swing.JPanel with SuperMixin
+  override lazy val peer: js.JPanel = new js.JPanel with SuperMixin
   
   /** This panel's underlying layout manager. */
-  val layout = new GroupLayout(peer)
+  val layout = new js.GroupLayout(peer)
   
   peer.setLayout(layout)
   autoCreateGaps = true

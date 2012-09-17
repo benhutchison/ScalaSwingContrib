@@ -1,17 +1,7 @@
-/*                     __                                               *\
-**     ________ ___   / /  ___     Scala API                            **
-**    / __/ __// _ | / /  / _ |    (c) 2007-2010, LAMP/EPFL             **
-**  __\ \/ /__/ __ |/ /__/ __ |    http://scala-lang.org/               **
-** /____/\___/_/ |_/____/_/ | |                                         **
-**                          |/                                          **
-\*                                                                      */
+package scalaswingcontrib
 
-
-package scala.swing
-
-import scala.swing.event._
-import Swing._
-import javax.swing.Icon
+import scala.swing.{Label, Component, Publisher}
+import javax.{swing => js}
 
 /**
 * Describes the structure of a component's companion object where pluggable cell renderers must be supported.
@@ -49,11 +39,11 @@ trait RenderableCellsCompanion {
     /**
     * Convenient default display of a cell node, which provides an Icon and label text for each item.
     */
-    def labelled[A](f: A => (Icon, String)): DefaultRenderer[A]
+    def labelled[A](f: A => (js.Icon, String)): DefaultRenderer[A]
     
     protected trait LabelRenderer[-A] extends CellRenderer[A] {
       this: DefaultRenderer[A] =>
-      val convert: A => (Icon, String)
+      val convert: A => (js.Icon, String)
       
       override abstract def componentFor(owner: Owner, a: A, info: companion.CellInfo): Component = {
         val c = super.componentFor(owner, a, info)

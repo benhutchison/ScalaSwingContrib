@@ -229,8 +229,8 @@ object TreeDemo extends SimpleSwingApplication {
     
     // File system icons
     def getIconUrl(path: String) = resourceFromClassloader(path) ensuring (_ != null, "Couldn't find icon " + path)
-    val fileIcon = Icon(getIconUrl("/scala/swing/test/images/file.png"))
-    val folderIcon = Icon(getIconUrl("/scala/swing/test/images/folder.png"))
+    val fileIcon = Icon(getIconUrl("/scalaswingcontrib/test/images/file.png"))
+    val folderIcon = Icon(getIconUrl("/scalaswingcontrib/test/images/folder.png"))
     
     // Contrived class hierarchy
     case class Customer(id: Int, title: String, firstName: String, lastName: String)
@@ -252,7 +252,7 @@ object TreeDemo extends SimpleSwingApplication {
       Order(3, bob, boxOfNails, 44),
       Order(4, susan, nailGun, 1))
       
-    lazy val xmlDoc: Node = try {XML load resourceFromClassloader("/scala/swing/test/sample.xml")}
+    lazy val xmlDoc: Node = try {XML load resourceFromClassloader("/scalaswingcontrib/test/sample.xml")}
                             catch {case _ => <error> Error reading XML file. </error>}
                             
                     

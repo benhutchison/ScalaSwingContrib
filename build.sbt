@@ -1,18 +1,22 @@
 name := "ScalaSwingContrib"
 
-organization := "ScalaSwingContrib"
+organization := "scalaswingcontrib"
 
 version := "1.0"
 
+scalaVersion := "2.9.2"
+
 libraryDependencies ++= Seq(
-  "org.scala-lang" % "scala-swing" % "2.9.1"
+  "org.scala-lang" % "scala-swing" % "2.9.2"
 )
 
+crossPaths := false
 
 // Following settings taken from: 
 //https://github.com/sbt/sbt.github.com/blob/gen-master/src/jekyll/using_sonatype.md
 
 publishMavenStyle := true
+
 
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
@@ -22,12 +26,15 @@ publishTo <<= version { (v: String) =>
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
 
+//for local testing
+//publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
+
 publishArtifact in Test := false
 
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
-  <url>http://jsuereth.com/scala-arm</url>
+  <url>http://github.com/benhutchison/ScalaSwingContrib</url>
   <licenses>
     <license>
       <name>BSD-style</name>
@@ -52,7 +59,3 @@ pomExtra := (
     </developer>
   </developers>)
   
-credentials += Credentials("Sonatype Nexus Repository Manager", 
-                           "oss.sonatype.org", 
-                           "<your username>",
-                           "<your password>")  

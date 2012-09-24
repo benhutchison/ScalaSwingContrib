@@ -8,7 +8,7 @@ A collection of community-contributed extensions to Scala Swing, including
 * A PopupMenu wrapper contributed by https://github.com/sullivan-
 * A ColorChooser contributed by Andy Hicks
 
-All classes reside in the '''scalaswingcontrib''' package namespace.
+All classes reside in the scalaswingcontrib package namespace.
 
 Jars can be downloaded manually from the distributions directory.
 
@@ -19,7 +19,7 @@ ScalaSwingContrib is built with SBT: sbt package
 
 A Maven hosting application with Sonatype is in progress
 
-* Group Id: scalaswingcontrib
+* Group Id:  com.github.benhutchison
 * Aftifact Id: ScalaSwingContrib
 * Version: 1.0
 

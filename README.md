@@ -7,6 +7,8 @@ A collection of community-contributed extensions to Scala Swing, including
 * A GroupPanel to display items using javax.swing.GroupLayout, contributed by Andreas Flierl
 * A PopupMenu wrapper contributed by https://github.com/sullivan-
 * A ColorChooser contributed by Andy Hicks
+* RichColor enriches java.awt.Color with methods to move around in color space, contributed by Ben Hutchison
+* AbsoluteLayoutPanel supports absolute layouts (Swing's null LayoutManager) in ScalaSwing, contributed by Ben Hutchison and Ken Scambler
 
 All classes reside in the scalaswingcontrib package namespace.
 

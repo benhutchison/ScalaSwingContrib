@@ -2,6 +2,8 @@ package scalaswingcontrib
 
 import java.awt.Color
 
+import Utils._
+
 class RichColor(color: Color) {
 
   def toHexString = "#" + Integer.toHexString(color.getRGB()).substring(2)
@@ -51,7 +53,7 @@ class RichColor(color: Color) {
     brightenPercent(-percent)
   }
 
-  private def ensurePercent(percent: Int) {require(percent >= -100 && percent <= 100)}
+  
 
   def mapRgbComponents(f: (Int)=>Int) = {
     val f2 = f.andThen(clamp _)

@@ -9,6 +9,7 @@ A collection of community-contributed extensions to Scala Swing, including
 * A ColorChooser contributed by Andy Hicks
 * RichColor enriches java.awt.Color with methods to move around in color space, contributed by Ben Hutchison
 * AbsoluteLayoutPanel supports absolute layouts (Swing's null LayoutManager) in ScalaSwing, contributed by Ben Hutchison and Ken Scambler
+* RichFont enriches java.awt.Font
 
 All classes reside in the scalaswingcontrib package namespace.
 
@@ -23,7 +24,7 @@ A Maven hosting application with Sonatype is in progress
 
 * Group Id:  com.github.benhutchison
 * Aftifact Id: ScalaSwingContrib
-* Version: 1.2
+* Version: 1.3
 
 Bug reports and pull requests welcome. 
 

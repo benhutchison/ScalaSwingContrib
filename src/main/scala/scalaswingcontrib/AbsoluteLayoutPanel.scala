@@ -24,12 +24,17 @@ class AbsoluteLayoutPanel(val adjustForBorder: Boolean) extends Panel with Conta
   protected def areValid(c: Constraints) = (true, "")
   
   protected def add(comp: Component, c: Constraints) {
-    def adjusted(c: Constraints) = {
-      if (adjustForBorder) {
-        (c._1 + insets.left, c._2 + insets.top)
-      } else {c}
-    }
+    val xInset = if (adjustForBorder) insets.left else 0 
+    val yInset = if (adjustForBorder) insets.top else 0 
     
+    def adjusted(c: Constraints) = (c._1 + xInset, c._2 + yInset)
+    
+    def largestChildSize: (Int, Int) = ((0,0) /: contents) {(size, next) => 
+      import math.max
+      (max(size._1, next.location.x - xInset + next.size.width), 
+       max(size._2, next.location.y - yInset + next.size.height))
+    }
+
     comp.peer.setLocation(adjusted(c))
     if (comp.size == null || comp.size == new Dimension(0,0)) {
       comp.peer.setSize(comp.preferredSize)
@@ -42,9 +47,4 @@ class AbsoluteLayoutPanel(val adjustForBorder: Boolean) extends Panel with Conta
   
   def insets = border.getBorderInsets(peer)
   
-  def largestChildSize: (Int, Int) = ((0,0) /: contents) {(size, next) => 
-    import math.max
-    (max(size._1, next.location.x + next.size.width), 
-     max(size._2, next.location.y + next.size.height))
-  }
 }

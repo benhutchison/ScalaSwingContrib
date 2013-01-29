@@ -2,6 +2,7 @@ package scalaswingcontrib.group
 
 import scala.swing.Component
 import javax.{swing => js}
+import scala.language.implicitConversions
 
 /** Provides an implicit conversion and wrappers so that arbitrary Swing 
   * components may be placed inside a `GroupPanel` but still be checked for

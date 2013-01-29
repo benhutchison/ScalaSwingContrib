@@ -2,6 +2,7 @@ package scalaswingcontrib.test.group
 
 import scalaswingcontrib.group.GroupPanel
 import scala.swing.{Button, SimpleSwingApplication, MainFrame, CheckBox, TextField, Label}
+import scala.language.reflectiveCalls
 
 object GroupLayoutDemo extends SimpleSwingApplication {
   override def top = new MainFrame {

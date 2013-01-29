@@ -1,7 +1,7 @@
 package scalaswingcontrib
 
 import java.awt.Color
-
+import scala.language.implicitConversions
 import Utils._
 
 class RichColor(color: Color) {

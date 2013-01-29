@@ -1,6 +1,7 @@
 package scalaswingcontrib.group
 
 import javax.{swing => js}
+import scala.language.implicitConversions
 
 /** Provides the definitions for parallel and vertical grouping.
   * 

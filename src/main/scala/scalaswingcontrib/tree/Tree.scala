@@ -7,6 +7,7 @@ import java.{util => ju}
 import javax.{swing => js}
 import js.{tree => jst}
 import js.{event => jse}
+import scala.language.{implicitConversions, reflectiveCalls}
 
 sealed trait TreeEditors extends EditableCellsCompanion {
   this: Tree.type => 
@@ -374,11 +375,11 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
       def leadSelection = peer.getLeadSelectionRow
     }
 
-    object paths extends SelectionSet[Path[A]](peer.getSelectionPaths map treePathToPath toSeq) {
+    object paths extends SelectionSet[Path[A]](peer.getSelectionPaths.map(treePathToPath).toSeq) {
       def -=(p: Path[A]) = { peer.removeSelectionPath(p); this }
       def +=(p: Path[A]) = { peer.addSelectionPath(p); this }
-      def --=(ps: Seq[Path[A]]) = { peer.removeSelectionPaths(ps map pathToTreePath toArray); this }
-      def ++=(ps: Seq[Path[A]]) = { peer.addSelectionPaths(ps map pathToTreePath toArray); this }
+      def --=(ps: Seq[Path[A]]) = { peer.removeSelectionPaths(ps.map(pathToTreePath).toArray); this }
+      def ++=(ps: Seq[Path[A]]) = { peer.addSelectionPaths(ps.map(pathToTreePath).toArray); this }
       def leadSelection: Option[Path[A]] = Option(peer.getLeadSelectionPath)
     }
 
@@ -490,7 +491,7 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
   
   // Follows the naming convention of ListView.selectIndices()
   def selectRows(rows: Int*)  { peer.setSelectionRows(rows.toArray) }
-  def selectPaths(paths: Path[A]*) { peer.setSelectionPaths(paths map pathToTreePath toArray) }
+  def selectPaths(paths: Path[A]*) { peer.setSelectionPaths(paths.map(pathToTreePath).toArray) }
   def selectInterval(first: Int, last: Int) { peer.setSelectionInterval(first, last) }
   
   def rowCount = peer.getRowCount

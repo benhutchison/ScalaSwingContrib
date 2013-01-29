@@ -1,6 +1,7 @@
 package scalaswingcontrib.group
 
 import javax.{swing => js}
+import scala.language.implicitConversions
 
 /** Provides types and constants to ensure the correct use of pixel sizes and 
   * size hints in a `GroupLayout`. Integer values will be converted to a size 

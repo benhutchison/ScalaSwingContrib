@@ -4,6 +4,7 @@ import scala.swing.{Component, Publisher}
 import scalaswingcontrib.event.{CellEditingCancelled, CellEditingStopped}
 import javax.{swing => js}
 import javax.swing.{event => jse}
+import scala.language.higherKinds
 
 /**
 * Describes the structure of a component's companion object where pluggable cell editors must be supported.

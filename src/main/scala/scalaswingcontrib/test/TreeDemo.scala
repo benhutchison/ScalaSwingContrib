@@ -253,7 +253,7 @@ object TreeDemo extends SimpleSwingApplication {
       Order(4, susan, nailGun, 1))
       
     lazy val xmlDoc: Node = try {XML load resourceFromClassloader("/scalaswingcontrib/test/sample.xml")}
-                            catch {case _ => <error> Error reading XML file. </error>}
+                            catch {case _: IOException => <error> Error reading XML file. </error>}
                             
                     
     // Pretend file system, so we can safely add/edit/delete stuff

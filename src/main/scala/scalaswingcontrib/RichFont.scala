@@ -1,6 +1,6 @@
 package scalaswingcontrib
 import java.awt.Font
-
+import scala.language.implicitConversions
 import Utils._
 
 class RichFont(font: Font) {

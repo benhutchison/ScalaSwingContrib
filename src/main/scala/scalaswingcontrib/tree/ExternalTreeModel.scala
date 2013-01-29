@@ -5,7 +5,8 @@ import Tree.Path
 import scala.collection.mutable
 import javax.swing.{tree => jst}
 import javax.swing.{event => jse}
-
+import scala.reflect.ClassTag
+import scala.sys.error
 
 object ExternalTreeModel {
   def empty[A]: ExternalTreeModel[A] = new ExternalTreeModel[A](Seq.empty, _ => Seq.empty)
@@ -37,8 +38,8 @@ class ExternalTreeModel[A](rootItems: Seq[A],
   
   def map[B](f: A=>B): InternalTreeModel[B] = toInternalModel map f
   
-  def pathToTreePath(path: Tree.Path[A]): jst.TreePath = {
-    val array = (hiddenRoot +: path).map(_.asInstanceOf[AnyRef]).toArray(ClassManifest.Object)
+  def pathToTreePath(path: Tree.Path[A]): jst.TreePath = {                                
+    val array = (hiddenRoot +: path).map(_.asInstanceOf[AnyRef]).toArray(ClassTag.Object)
     new jst.TreePath(array)
   }
   
@@ -158,7 +159,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
     if (index == -1) return false
       
     val succeeded = if (pathToRemove.size == 1) {
-      rootsVar = rootsVar.filterNot(pathToRemove.last ==)
+      rootsVar = rootsVar filterNot pathToRemove.last.==
       true
     }
     else {
@@ -178,7 +179,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
 
     def getChildrenOf(parent: Any) = parent match {
       case `hiddenRoot` => roots
-      case a: A => children(a)
+      case a => children(a.asInstanceOf[A])
     }
     
     def getChild(parent: Any, index: Int): AnyRef = {

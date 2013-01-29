@@ -7,6 +7,7 @@ import TreeModel.hiddenRoot
 import scala.collection.JavaConversions.enumerationAsScalaIterator
 import scala.sys.error
 import InternalTreeModel.{PeerModel, PeerNode}
+import scala.reflect.ClassTag
 
 object InternalTreeModel {
   
@@ -44,7 +45,7 @@ class InternalTreeModel[A] private (val peer: PeerModel) extends TreeModel[A] {
       node :: pathList
     }.reverse
 
-    val array = nodePath.toArray(ClassManifest.Object)
+    val array = nodePath.toArray(ClassTag.Object)
     new jst.TreePath(array)
   }
 

@@ -4,6 +4,7 @@ package tree
 import Tree.Path
 import javax.swing.{event => jse}
 import javax.swing.{tree => jst}
+import scala.sys.error
 
 object TreeModel {
   

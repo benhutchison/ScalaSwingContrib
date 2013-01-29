@@ -2,6 +2,7 @@ package scalaswingcontrib
 
 import scala.swing.{Label, Component, Publisher}
 import javax.{swing => js}
+import scala.language.higherKinds
 
 /**
 * Describes the structure of a component's companion object where pluggable cell renderers must be supported.

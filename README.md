@@ -24,7 +24,9 @@ A Maven hosting application with Sonatype is in progress
 
 * Group Id:  com.github.benhutchison
 * Aftifact Id: ScalaSwingContrib
-* Version: 1.3
+* Version: 1.4
+
+Version 1.4+ is built with Scala 2.10. 1.3 is built with Scala 2.9.2.
 
 Bug reports and pull requests welcome. 
 

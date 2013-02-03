@@ -1,10 +1,10 @@
 package scalaswingcontrib
 
-import scala.swing.{Component, Publisher}
+import swing.{Component, Publisher}
 import scalaswingcontrib.event.{CellEditingCancelled, CellEditingStopped}
 import javax.{swing => js}
 import javax.swing.{event => jse}
-import scala.language.higherKinds
+import language.higherKinds
 
 /**
 * Describes the structure of a component's companion object where pluggable cell editors must be supported.
@@ -30,7 +30,7 @@ trait EditableCellsCompanion {
     def peer: companion.Peer
 
     protected def fireCellEditingCancelled() { publish(CellEditingCancelled(CellEditor.this)) }
-    protected def fireCellEditingStopped() { publish(CellEditingStopped(CellEditor.this)) }
+    protected def fireCellEditingStopped()   { publish(CellEditingStopped(  CellEditor.this)) }
 
     protected def listenToPeer(p: js.CellEditor) {
       p.addCellEditorListener(new jse.CellEditorListener {
@@ -40,15 +40,15 @@ trait EditableCellsCompanion {
     }
 
     abstract class EditorPeer extends js.AbstractCellEditor {
-      override def getCellEditorValue(): AnyRef = value.asInstanceOf[AnyRef]
+      override def getCellEditorValue: AnyRef = value.asInstanceOf[AnyRef]
       listenToPeer(this)
     }
 
     def componentFor(owner: Owner, value: A, cellInfo: companion.CellInfo): Component
     
-    def cellEditable = peer.isCellEditable(null)
-    def shouldSelectCell = peer.shouldSelectCell(null)
-    def cancelCellEditing() = peer.cancelCellEditing
-    def stopCellEditing() = peer.stopCellEditing
+    def cellEditable        = peer.isCellEditable(null)
+    def shouldSelectCell    = peer.shouldSelectCell(null)
+    def cancelCellEditing() { peer.cancelCellEditing() }
+    def stopCellEditing()   = peer.stopCellEditing
   }
 }

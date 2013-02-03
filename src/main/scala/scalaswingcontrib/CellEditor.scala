@@ -1,11 +1,12 @@
 package scalaswingcontrib
-import scala.swing.Publisher
+
+import swing.Publisher
 
 /**
 * Common superclass of cell editors.
 * @author Ken Scambler
 */
-trait CellEditor[A] extends Publisher {
+trait CellEditor[+A] extends Publisher {
   def peer: AnyRef
   def value: A
   def cellEditable: Boolean

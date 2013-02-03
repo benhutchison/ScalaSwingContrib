@@ -2,15 +2,18 @@ name := "ScalaSwingContrib"
 
 organization := "com.github.benhutchison"
 
-version := "1.4"
+version := "1.5-SNAPSHOT"
 
 scalaVersion := "2.10.0"
 
+libraryDependencies <+= scalaVersion { sv => "org.scala-lang" % "scala-swing" % sv }
+
 libraryDependencies ++= Seq(
-  "org.scala-lang" % "scala-swing" % "2.10.0",
   "org.specs2" %% "specs2" % "1.13" % "test",
   "junit" % "junit" % "4.7" % "test"
 )
+
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 crossPaths := false
 

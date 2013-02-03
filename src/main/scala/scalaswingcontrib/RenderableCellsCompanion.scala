@@ -1,8 +1,8 @@
 package scalaswingcontrib
 
-import scala.swing.{Label, Component, Publisher}
+import swing.{Label, Component, Publisher}
 import javax.{swing => js}
-import scala.language.higherKinds
+import language.higherKinds
 
 /**
 * Describes the structure of a component's companion object where pluggable cell renderers must be supported.
@@ -40,7 +40,7 @@ trait RenderableCellsCompanion {
     /**
     * Convenient default display of a cell node, which provides an Icon and label text for each item.
     */
-    def labelled[A](f: A => (js.Icon, String)): DefaultRenderer[A]
+    def labeled[A](f: A => (js.Icon, String)): DefaultRenderer[A]
     
     protected trait LabelRenderer[-A] extends CellRenderer[A] {
       this: DefaultRenderer[A] =>
@@ -56,7 +56,7 @@ trait RenderableCellsCompanion {
     }
   }
 
-  trait CellRenderer[-A] extends Publisher  { 
+  trait CellRenderer[-A] extends Publisher  {
     val companion: CellRendererCompanion
     def peer: companion.Peer
     def componentFor(owner: Owner, value: A, cellInfo: companion.CellInfo): Component

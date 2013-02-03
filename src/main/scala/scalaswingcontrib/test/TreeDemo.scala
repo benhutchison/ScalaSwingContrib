@@ -1,15 +1,13 @@
 package scalaswingcontrib
 package test
 
-import scala.xml.{Node, XML}
-import scala.swing.{Button, Label, SimpleSwingApplication, Dimension, Component, 
-                    Action, GridPanel, MainFrame, TabbedPane, BorderPanel, ScrollPane}
-import scala.swing.Swing.{Icon, pair2Dimension}
+import xml.{Node, XML}
+import swing.{Button, Label, SimpleSwingApplication, Dimension, Component,
+                    Action, GridPanel, MainFrame, TabbedPane, BorderPanel, ScrollPane, Swing}
+import Swing.{Icon, pair2Dimension}
 import scalaswingcontrib.tree.{Tree, TreeModel, InternalTreeModel, ExternalTreeModel}
 import scalaswingcontrib.event.TreeNodeSelected
-import java.awt.Color
-import java.awt.{event => jae}
-import scala.collection.mutable
+import collection.mutable
 import Tree.{Renderer, Editor}
 
 object TreeDemo extends SimpleSwingApplication {
@@ -31,12 +29,12 @@ object TreeDemo extends SimpleSwingApplication {
   
   // Use case 2: Show the filesystem with filter
   lazy val fileSystemTree = new Tree[File] {
-    model = TreeModel(new File(".")) {f => 
+    model = TreeModel(new File(".")) { f =>
       if (f.isDirectory) f.listFiles.toSeq 
       else Seq()
     }
     
-    renderer = Renderer.labelled {f =>
+    renderer = Renderer.labeled { f =>
       val icon = if (f.isDirectory) folderIcon 
                  else fileIcon
       (icon, f.getName)
@@ -98,7 +96,7 @@ object TreeDemo extends SimpleSwingApplication {
       case TreeNodeSelected(node) => externalTreeStatusBar.text = "Selected: " + node
     }
     
-    renderer = Renderer.labelled  {f =>
+    renderer = Renderer.labeled { f =>
       val icon = if (f.isDirectory) folderIcon 
                  else fileIcon
       (icon, f.name)

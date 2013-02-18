@@ -1,14 +1,14 @@
 package scalaswingcontrib
 
-import scala.swing.{Component, Publisher}
-import scala.collection.{mutable, Iterator, Seq}
+import swing.{Component, Publisher}
+import collection.mutable
 
 /**
 * Describes components that have a concept of a "cell", each of which contains a value, may be selected, 
 * and may support pluggable Renderers and Editors.
 */
 trait CellView[+A] {
-  this: Component =>
+  _: Component =>
     
   def editable: Boolean 
   def cellValues: Iterator[A]
@@ -32,7 +32,7 @@ trait CellView[+A] {
       override def size = nonNullOrEmpty(a).length
       def contains(s: S) = nonNullOrEmpty(a) contains s
       def iterator = nonNullOrEmpty(a).iterator
-      protected def nonNullOrEmpty[A](s: Seq[A]) = if (s != null) s else Seq.empty
+      protected def nonNullOrEmpty[A1](s: Seq[A1]) = if (s != null) s else Seq.empty
     }
     
     /**
@@ -43,22 +43,22 @@ trait CellView[+A] {
     /**
     * Whether or not the current selection is empty.
     */
-    def empty: Boolean
+    def isEmpty: Boolean
     
     /**
     * Returns the number of cells currently selected.
     */
-    def count: Int
+    def size: Int
   } 
   
-  val selection: CellSelection
+  def selection: CellSelection
 }
 
 /**
 * This should be mixed in to CellView implementations that support pluggable renderers.
 */
 trait RenderableCells[A] {
-  this: CellView[A] =>
+  _: CellView[A] =>
   val companion: RenderableCellsCompanion
   def renderer: companion.Renderer[A]
   def renderer_=(r: companion.Renderer[A]): Unit
@@ -68,7 +68,7 @@ trait RenderableCells[A] {
 * This should be mixed in to CellView implementations that support pluggable editors.
 */
 trait EditableCells[A]  {
-  this: CellView[A] =>
+  _: CellView[A] =>
   val companion: EditableCellsCompanion
   def editor: companion.Editor[A]
   def editor_=(r: companion.Editor[A]): Unit

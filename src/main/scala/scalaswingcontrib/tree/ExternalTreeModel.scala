@@ -2,23 +2,19 @@ package scalaswingcontrib
 package tree
 
 import Tree.Path
-import scala.collection.mutable
-import javax.swing.{tree => jst}
-import javax.swing.{event => jse}
-import scala.reflect.ClassTag
-import scala.sys.error
+import collection.mutable
+import javax.swing.{tree => jst, event => jse}
 
 object ExternalTreeModel {
   def empty[A]: ExternalTreeModel[A] = new ExternalTreeModel[A](Seq.empty, _ => Seq.empty)
-  def apply[A](roots: A*)(children: A => Seq[A]): ExternalTreeModel[A] = 
-      new ExternalTreeModel(roots, children)
+  def apply[A](roots: A*)(children: A => Seq[A]): ExternalTreeModel[A] =
+    new ExternalTreeModel(roots, children)
 }
 
 /**
  * Represents tree data as a sequence of root nodes, and a function that can retrieve child nodes.  
  */
-class ExternalTreeModel[A](rootItems: Seq[A], 
-                   children: A => Seq[A]) extends TreeModel[A] {
+class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends TreeModel[A] {
   self =>
   
   import TreeModel._
@@ -30,20 +26,21 @@ class ExternalTreeModel[A](rootItems: Seq[A],
   def getChildrenOf(parentPath: Path[A]): Seq[A] = if (parentPath.isEmpty) roots 
                                                    else children(parentPath.last)
   
-  def filter(p: A => Boolean): ExternalTreeModel[A] = new ExternalTreeModel[A](roots filter p, a => children(a) filter p) 
+  def filter(p: A => Boolean): ExternalTreeModel[A] =
+    new ExternalTreeModel[A](roots filter p, a => children(a) filter p)
 
   def toInternalModel: InternalTreeModel[A] = InternalTreeModel(roots: _*)(children)
   
   def isExternalModel = true
   
-  def map[B](f: A=>B): InternalTreeModel[B] = toInternalModel map f
+  def map[B](f: A => B): InternalTreeModel[B] = toInternalModel map f
   
-  def pathToTreePath(path: Tree.Path[A]): jst.TreePath = {                                
-    val array = (hiddenRoot +: path).map(_.asInstanceOf[AnyRef]).toArray(ClassTag.Object)
+  def pathToTreePath(path: Path[A]): jst.TreePath = {
+    val array = (hiddenRoot +: path).map(_.asInstanceOf[AnyRef]).toArray
     new jst.TreePath(array)
   }
   
-  def treePathToPath(tp: jst.TreePath): Tree.Path[A] = {
+  def treePathToPath(tp: jst.TreePath): Path[A] = {
     if (tp == null) null 
     else tp.getPath.map(_.asInstanceOf[A]).tail.toIndexedSeq
   } 
@@ -53,7 +50,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
    * make a TreeModel updatable, call makeUpdatable() to provide a new TreeModel with the specified update method.
    */
   protected[tree] val updateFunc: (Path[A], A) => A = {
-    (_,_) => error("Update is not supported on this tree")
+    (_,_) => throw new UnsupportedOperationException("Update is not supported on this tree")
   }
   
   /** 
@@ -62,7 +59,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
    * call insertableWith() to provide a new TreeModel with the specified insert method.
    */
   protected[tree] val insertFunc: (Path[A], A, Int) => Boolean = {
-    (_,_,_) => error("Insert is not supported on this tree")
+    (_,_,_) => throw new UnsupportedOperationException("Insert is not supported on this tree")
   }
 
   /** 
@@ -71,7 +68,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
    * call removableWith() to provide a new TreeModel with the specified remove method.
    */
   protected[tree] val removeFunc: Path[A] => Boolean = {
-    _ => error("Removal is not supported on this tree")
+    _ => throw new UnsupportedOperationException("Removal is not supported on this tree")
   }
   
   /**
@@ -113,7 +110,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
     val result = updateFunc(path, newValue)
 
     val replacingWithDifferentReference = existing.isInstanceOf[AnyRef] && 
-                                          (existing.asInstanceOf[AnyRef] ne result.asInstanceOf[AnyRef])
+                                         (existing.asInstanceOf[AnyRef] ne result.asInstanceOf[AnyRef])
        
     
     // If the result is actually replacing the node with a different reference object, then 
@@ -159,7 +156,7 @@ class ExternalTreeModel[A](rootItems: Seq[A],
     if (index == -1) return false
       
     val succeeded = if (pathToRemove.size == 1) {
-      rootsVar = rootsVar filterNot pathToRemove.last.==
+      rootsVar = rootsVar.filterNot(pathToRemove.last == _)
       true
     }
     else {
@@ -187,11 +184,11 @@ class ExternalTreeModel[A](rootItems: Seq[A],
       if (index >= 0 && index < ch.size) 
         ch(index).asInstanceOf[AnyRef] 
       else 
-        error("No child of \"" + parent + "\" found at index " + index)
+        throw new IndexOutOfBoundsException("No child of \"" + parent + "\" found at index " + index)
     }
     def getChildCount(parent: Any): Int = getChildrenOf(parent).size
     def getIndexOfChild(parent: Any, child: Any): Int = getChildrenOf(parent) indexOf child
-    def getRoot(): AnyRef = hiddenRoot
+    def getRoot: AnyRef = hiddenRoot
     def isLeaf(node: Any): Boolean = getChildrenOf(node).isEmpty
     
     

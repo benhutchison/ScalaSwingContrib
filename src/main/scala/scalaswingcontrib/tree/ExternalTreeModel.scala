@@ -2,7 +2,7 @@ package scalaswingcontrib
 package tree
 
 import Tree.Path
-import collection.mutable
+import scala.collection.mutable
 import javax.swing.{tree => jst, event => jse}
 
 object ExternalTreeModel {

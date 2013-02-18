@@ -1,17 +1,17 @@
 package scalaswingcontrib
 package tree
 
-import event.{TreeNodesInserted, TreeNodesRemoved, TreeStructureChanged, TreeNodesChanged, TreePathSelected}
-import swing.{Color, Component, Label, Scrollable}
+import scalaswingcontrib.event.{TreeNodesInserted, TreeNodesRemoved, TreeStructureChanged, TreeNodesChanged, TreePathSelected}
+import scala.swing.{Color, Component, Label, Scrollable}
 import java.{util => ju}
 import javax.{swing => js}
 import js.{tree => jst}
 import js.{event => jse}
-import collection.breakOut
-import language.{implicitConversions, reflectiveCalls}
+import scala.collection.breakOut
+import scala.language.{implicitConversions, reflectiveCalls}
 
 sealed trait TreeEditors extends EditableCellsCompanion {
-  _: Tree.type =>
+  this: Tree.type =>
 
   protected override type Owner = Tree[_]
 

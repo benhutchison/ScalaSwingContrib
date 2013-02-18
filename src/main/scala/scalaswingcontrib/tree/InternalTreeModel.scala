@@ -4,9 +4,9 @@ package tree
 import javax.swing.{tree => jst}
 import Tree.Path
 import TreeModel.hiddenRoot
-import collection.JavaConversions.enumerationAsScalaIterator
+import scala.collection.JavaConversions.enumerationAsScalaIterator
 import InternalTreeModel.{PeerModel, PeerNode}
-import collection.breakOut
+import scala.collection.breakOut
 
 object InternalTreeModel {
   

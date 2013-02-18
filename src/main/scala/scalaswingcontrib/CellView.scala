@@ -1,14 +1,14 @@
 package scalaswingcontrib
 
-import swing.{Component, Publisher}
-import collection.mutable
+import scala.swing.{Component, Publisher}
+import scala.collection.mutable
 
 /**
 * Describes components that have a concept of a "cell", each of which contains a value, may be selected, 
 * and may support pluggable Renderers and Editors.
 */
 trait CellView[+A] {
-  _: Component =>
+  this: Component =>
     
   def editable: Boolean 
   def cellValues: Iterator[A]
@@ -51,7 +51,7 @@ trait CellView[+A] {
     def size: Int
   } 
   
-  def selection: CellSelection
+  val selection: CellSelection
 }
 
 /**

@@ -1,8 +1,8 @@
 package scalaswingcontrib
 
-import swing.{Label, Component, Publisher}
+import scala.swing.{Label, Component, Publisher}
 import javax.{swing => js}
-import language.higherKinds
+import scala.language.higherKinds
 
 /**
 * Describes the structure of a component's companion object where pluggable cell renderers must be supported.

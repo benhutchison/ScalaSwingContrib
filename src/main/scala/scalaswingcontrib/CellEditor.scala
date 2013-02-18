@@ -1,6 +1,6 @@
 package scalaswingcontrib
 
-import swing.Publisher
+import scala.swing.Publisher
 
 /**
 * Common superclass of cell editors.

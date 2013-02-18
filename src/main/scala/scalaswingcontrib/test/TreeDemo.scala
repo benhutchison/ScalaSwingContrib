@@ -1,13 +1,13 @@
 package scalaswingcontrib
 package test
 
-import xml.{Node, XML}
-import swing.{Button, Label, SimpleSwingApplication, Dimension, Component,
+import scala.xml.{Node, XML}
+import scala.swing.{Button, Label, SimpleSwingApplication, Dimension, Component,
                     Action, GridPanel, MainFrame, TabbedPane, BorderPanel, ScrollPane, Swing}
 import Swing.{Icon, pair2Dimension}
 import scalaswingcontrib.tree.{Tree, TreeModel, InternalTreeModel, ExternalTreeModel}
 import scalaswingcontrib.event.TreeNodeSelected
-import collection.mutable
+import scala.collection.mutable
 import Tree.{Renderer, Editor}
 
 object TreeDemo extends SimpleSwingApplication {

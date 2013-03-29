@@ -294,6 +294,9 @@ object Tree extends TreeRenderers with TreeEditors {
 /**
  * Wrapper for a JTree.  The tree model is represented by a 
  * lazy child expansion function that may or may not terminate in leaf nodes.
+ *
+ * The tree publishes structural events, such as nodes being added or removed, on its main publisher,
+ * whereas selection changes are published to the dedicated [[Tree#selection]] object.
  * 
  * @see javax.swing.JTree
  */
@@ -363,9 +366,11 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
     def value = peer.getCellEditorValue.asInstanceOf[B]
   }
   
-  
   /**
-   * Selection model for Tree
+   * Selection model for Tree.
+   *
+   * To observe tree selections, make the reactor listen to this publishing object which will then dispatch
+   * instances of [[scalaswingcontrib.event.TreePathSelected]].
    */
   object selection extends CellSelection {
   
@@ -389,11 +394,11 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
 
     peer.getSelectionModel.addTreeSelectionListener(new jse.TreeSelectionListener {
       def valueChanged(e: jse.TreeSelectionEvent) {
-        val (newPath, oldPath) = e.getPaths.toList.partition(e.isAddedPath)
+        val (pathsAdded, pathsRemoved) = e.getPaths.toList.partition(e.isAddedPath)
         
         publish(new TreePathSelected(thisTree, 
-                newPath map treePathToPath, 
-                oldPath map treePathToPath, 
+                pathsAdded map treePathToPath,
+                pathsRemoved map treePathToPath,
                 Option(e.getNewLeadSelectionPath: Path[A]), 
                 Option(e.getOldLeadSelectionPath: Path[A])))
       }

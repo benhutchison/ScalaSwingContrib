@@ -294,6 +294,9 @@ object Tree extends TreeRenderers with TreeEditors {
 /**
  * Wrapper for a JTree.  The tree model is represented by a 
  * lazy child expansion function that may or may not terminate in leaf nodes.
+ *
+ * The tree publishes structural events, such as nodes being added or removed, on its main publisher,
+ * whereas selection changes are published to the dedicated [[Tree#selection]] object.
  * 
  * @see javax.swing.JTree
  */
@@ -363,9 +366,11 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
     def value = peer.getCellEditorValue.asInstanceOf[B]
   }
   
-  
   /**
-   * Selection model for Tree
+   * Selection model for Tree.
+   *
+   * To observe tree selections, make the reactor listen to this publishing object which will then dispatch
+   * instances of [[scalaswingcontrib.event.TreePathSelected]].
    */
   object selection extends CellSelection {
   
@@ -379,7 +384,10 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
       def leadSelection = peer.getLeadSelectionRow
     }
 
-    object paths extends SelectionSet[Path[A]](peer.getSelectionPaths.map(treePathToPath)(breakOut): Seq[Path[A]]) {
+    object paths extends SelectionSet[Path[A]]({
+      val p = peer.getSelectionPaths
+      if (p == null) Seq.empty else p.map(treePathToPath)(breakOut)
+    }) {
       def -=(p: Path[A]) = { peer.removeSelectionPath(p); this }
       def +=(p: Path[A]) = { peer.addSelectionPath(p); this }
       def --=(ps: Seq[Path[A]]) = { peer.removeSelectionPaths(ps.map(pathToTreePath).toArray); this }
@@ -389,11 +397,11 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
 
     peer.getSelectionModel.addTreeSelectionListener(new jse.TreeSelectionListener {
       def valueChanged(e: jse.TreeSelectionEvent) {
-        val (newPath, oldPath) = e.getPaths.toList.partition(e.isAddedPath)
+        val (pathsAdded, pathsRemoved) = e.getPaths.toList.partition(e.isAddedPath)
         
         publish(new TreePathSelected(thisTree, 
-                newPath map treePathToPath, 
-                oldPath map treePathToPath, 
+                pathsAdded map treePathToPath,
+                pathsRemoved map treePathToPath,
                 Option(e.getNewLeadSelectionPath: Path[A]), 
                 Option(e.getOldLeadSelectionPath: Path[A])))
       }
@@ -404,7 +412,7 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
     
     def mode             = Tree.SelectionMode(peer.getSelectionModel.getSelectionMode)
     def mode_=(m: Tree.SelectionMode.Value) { peer.getSelectionModel.setSelectionMode(m.id) }
-    def selectedNode: A  = peer.getLastSelectedPathComponent.asInstanceOf[A]
+    def selectedNode: Option[A] = Option(peer.getLastSelectedPathComponent.asInstanceOf[A])
     def isEmpty          = peer.isSelectionEmpty
     def size             = peer.getSelectionCount
 
@@ -488,7 +496,7 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
 
   def getRowForLocation(x: Int, y: Int): Int = peer.getRowForLocation(x, y)
   def getRowForPath(path: Path[A]) : Int     = peer.getRowForPath(pathToTreePath(path))
-  def getClosestPathForLocation(x: Int, y: Int): Path[A]  = peer.getClosestPathForLocation(x, y)
+  def getClosestPathForLocation(x: Int, y: Int): Option[Path[A]] = Option(peer.getClosestPathForLocation(x, y))
   def getClosestRowForLocation( x: Int, y: Int): Int      = peer.getClosestRowForLocation( x, y)
   
   def lineStyle        = Tree.LineStyle withName peer.getClientProperty("JTree.lineStyle").toString
@@ -514,5 +522,5 @@ class Tree[A](private var treeDataModel: TreeModel[A] = TreeModel.empty[A])
   def makeVisible(path: Path[A])   { peer.makeVisible(pathToTreePath(path)) }
   def cancelEditing()              { peer.cancelEditing() }
   def stopEditing(): Boolean     = { peer.stopEditing() }
-  def editingPath                  = peer.getEditingPath
+  def editingPath: Option[Path[A]] = Option(peer.getEditingPath)
 }

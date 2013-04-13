@@ -51,6 +51,6 @@ class PopupMenu extends Component with SequentialContainer.Wrapper {
     }
 
     peer.addPopupMenuListener(listener)
-    show(invoker.peer, x, y)
+    show(invoker, x, y)
   }
 }

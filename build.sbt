@@ -9,8 +9,8 @@ scalaVersion := "2.10.1"
 libraryDependencies <+= scalaVersion { sv => "org.scala-lang" % "scala-swing" % sv }
 
 libraryDependencies ++= Seq(
-//  "org.specs2" %% "specs2" % "1.13" % "test",
-//  "junit" % "junit" % "4.7" % "test"
+  "org.specs2" %% "specs2" % "1.13" % "test",
+  "junit" % "junit" % "4.7" % "test"
 )
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")

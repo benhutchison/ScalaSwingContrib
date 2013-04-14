@@ -39,18 +39,5 @@ class PopupMenu extends Component with SequentialContainer.Wrapper {
   }
 
   def show(invoker: Component, x: Int, y: Int): Unit = peer.show(invoker.peer, x, y)
-  
-  def showWithCallback(invoker: Component, x: Int, y: Int, onHide: () => Unit) = {
-    val listener = new PopupMenuListener {
-      def popupMenuWillBecomeVisible(e: PopupMenuEvent) = {}
-      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) = {
-        onHide()
-        peer.removePopupMenuListener(this)
-      }
-      def popupMenuCanceled(e: PopupMenuEvent) = {}
-    }
 
-    peer.addPopupMenuListener(listener)
-    show(invoker, x, y)
-  }
 }

@@ -3,7 +3,7 @@ ScalaSwingContrib
 
 A collection of community-contributed extensions to Scala Swing, including
 
-* A Tree and TreeModel for wrapping JTree, contributed by Ken Scambler
+* A Tree and TreeModel for wrapping JTree, contributed by Ken Scambler & Sciss
 * A GroupPanel to display items using javax.swing.GroupLayout, contributed by Andreas Flierl
 * A PopupMenu wrapper contributed by https://github.com/sullivan-
 * A ColorChooser contributed by Andy Hicks
@@ -20,13 +20,13 @@ and is maintained by Ben Hutchison and Ken Scambler.
 
 ScalaSwingContrib is built with SBT: sbt package
 
-A Maven hosting application with Sonatype is in progress
+Maven details
 
 * Group Id:  com.github.benhutchison
 * Aftifact Id: ScalaSwingContrib
-* Version: 1.4
+* Version: 1.5
 
-Version 1.4+ is built with Scala 2.10. 1.3 is built with Scala 2.9.2.
+Version 1.4+ is built with Scala 2.10.1. 1.3 is built with Scala 2.9.2.
 
 Bug reports and pull requests welcome. 
 

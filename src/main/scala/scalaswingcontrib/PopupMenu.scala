@@ -49,5 +49,5 @@ class PopupMenu extends Component with SequentialContainer.Wrapper {
       }
       def popupMenuCanceled(e: js.event.PopupMenuEvent) = {}
     }
-
+  }
 }

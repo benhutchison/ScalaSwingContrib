@@ -50,7 +50,4 @@ class PopupMenu extends Component with SequentialContainer.Wrapper {
       def popupMenuCanceled(e: js.event.PopupMenuEvent) = {}
     }
 
-    peer.addPopupMenuListener(listener)
-    show(invoker, x, y)
-  }
 }

@@ -4,7 +4,7 @@ organization := "com.github.benhutchison"
 
 version := "1.5-SNAPSHOT"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.10.1"
 
 libraryDependencies <+= scalaVersion { sv => "org.scala-lang" % "scala-swing" % sv }
 

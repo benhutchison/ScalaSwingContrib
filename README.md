@@ -13,8 +13,6 @@ A collection of community-contributed extensions to Scala Swing, including
 
 All classes reside in the scalaswingcontrib package namespace.
 
-Jars can be downloaded manually from the distributions directory.
-
 ScalaSwingContrib is derived from [https://github.com/kenbot/scala-swing] and [https://github.com/ingoem/scala-swing/pulls], 
 and is maintained by Ben Hutchison and Ken Scambler.
 

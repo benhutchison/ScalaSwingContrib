@@ -20,13 +20,14 @@ and is maintained by Ben Hutchison and Ken Scambler.
 
 ScalaSwingContrib is built with SBT: sbt package
 
-Maven details
+###Maven details
 
-* Group Id:  com.github.benhutchison
-* Aftifact Id: ScalaSwingContrib
-* Version: 1.5
+1.5 is Cross-built for 2.10.4 and 2.11.0:
 
-Version 1.4+ is built with Scala 2.10.1. 1.3 is built with Scala 2.9.2.
+"com.github.benhutchison" %% "ScalaSwingContrib" % "1.5"
+
+
+Version 1.4 is built with Scala 2.10.1. 1.3 is built with Scala 2.9.2.
 
 Bug reports and pull requests welcome. 
 

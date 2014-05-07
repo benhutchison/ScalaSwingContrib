@@ -10,7 +10,7 @@ scalaVersion := "2.11.0"
 
 sonatypeSettings
 
-profileName := "benhutchison"
+profileName := "com.github.benhutchison"
 
 libraryDependencies ++= {
   val sv = scalaVersion.value

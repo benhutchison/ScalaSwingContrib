@@ -67,9 +67,17 @@ object TreeDemo extends SimpleSwingApplication {
   lazy val infiniteTree = new Tree(TreeModel(1000) {n => 1 to n filter (n % _ == 0)}) {
     expandRow(0)
   }
-  
-  
-  
+
+  val externalTreeStatusBar = new Label {
+    preferredSize = (100,12)
+  }
+
+  val internalTreeStatusBar = new Label {
+    preferredSize = (100,12)
+  }
+
+
+
   // Use case 5: Mutable external tree model
   val mutableExternalTree = new Tree[PretendFile] {
 
@@ -184,14 +192,6 @@ object TreeDemo extends SimpleSwingApplication {
   }
 
   
-  val externalTreeStatusBar = new Label {
-    preferredSize = (100,12)
-  }
-  
-  val internalTreeStatusBar = new Label {
-    preferredSize = (100,12)
-  }
-  
   // Other setup stuff
   
    
@@ -263,7 +263,7 @@ object TreeDemo extends SimpleSwingApplication {
       childFiles foreach {_.parent = Some(this)}
       private var childBuffer = mutable.ListBuffer(childFiles: _*)
       
-      override def toString() = name
+      override def toString = name
       def name = nameVar
       def rename(str: String): Boolean = if (siblingExists(str)) false 
                                          else { nameVar = str; true }
@@ -277,11 +277,11 @@ object TreeDemo extends SimpleSwingApplication {
           true 
         }
       }
-      def delete(): Boolean = parent.map(_ removeChild this) getOrElse false
+      def delete(): Boolean = parent.exists(_ removeChild this)
       def removeChild(child: PretendFile): Boolean = if (children contains child) {childBuffer -= child; true}
                                                      else false
                                                      
-      def siblingExists(siblingName: String) = parent.map(_ childExists siblingName) getOrElse false
+      def siblingExists(siblingName: String) = parent.exists(_ childExists siblingName)
       def childExists(childName: String) = children.exists(_.name == childName)
       def children: Seq[PretendFile] = childBuffer
       def isDirectory = children.nonEmpty

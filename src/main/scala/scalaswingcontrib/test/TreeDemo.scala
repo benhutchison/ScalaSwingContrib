@@ -169,7 +169,9 @@ object TreeDemo extends SimpleSwingApplication {
     val removeButton = new Button(Action("Remove") {
       val pathToRemove = pretendFileTree.selection.paths.leadSelection
       for (path <- pathToRemove) {
-        val succeeded = pretendFileTree.model remove path
+        val succeeded = if (path.lengthCompare(1)>0) {
+          pretendFileTree.model remove path
+        } else false
         setStatus("Remove " + (if (succeeded) "succeeded" else "failed"))
       }
     })

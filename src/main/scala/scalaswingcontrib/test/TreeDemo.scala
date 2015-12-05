@@ -80,10 +80,13 @@ object TreeDemo extends SimpleSwingApplication {
           pathOfFile.last
           
     }.makeInsertableWith {
-      (parentPath, fileToInsert, index) => 
-        val parentDir = parentPath.last
-        if (parentDir.children contains fileToInsert) false
-        else parentDir.insertChild(fileToInsert, index)
+      (parentPath, fileToInsert, index) =>
+        if (parentPath.isEmpty) false
+        else {
+          val parentDir = parentPath.last
+          if (parentDir.children contains fileToInsert) false
+          else parentDir.insertChild(fileToInsert, index)
+        }
       
     }.makeRemovableWith {
       (pathToRemove) => 

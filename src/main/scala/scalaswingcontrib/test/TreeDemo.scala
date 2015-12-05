@@ -151,7 +151,9 @@ object TreeDemo extends SimpleSwingApplication {
     val insertBeforeButton = new Button(Action("Insert before") {
       val pathToInsertBefore = pretendFileTree.selection.paths.leadSelection
       for (path <- pathToInsertBefore) {
-        val succeeded = pretendFileTree.model.insertBefore(path, PretendFile("new-before-" + path.last.name))
+        val succeeded = if (path.lengthCompare(1)>0) {
+          pretendFileTree.model.insertBefore(path, PretendFile("new-before-" + path.last.name))
+        } else false
         setStatus("Inserting " + (if (succeeded) "succeeded" else "failed"))
       }
     })

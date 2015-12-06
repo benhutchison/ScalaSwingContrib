@@ -1,8 +1,6 @@
 package scalaswingcontrib
 package tree
 
-import javax.swing.tree.DefaultMutableTreeNode
-
 import scalaswingcontrib.event.{TreeNodesInserted, TreeNodesRemoved, TreeStructureChanged, TreeNodesChanged, TreePathSelected}
 import scala.swing.{Color, Component, Label, Scrollable}
 import java.{util => ju}

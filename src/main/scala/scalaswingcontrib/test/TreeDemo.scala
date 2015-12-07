@@ -162,7 +162,9 @@ object TreeDemo extends SimpleSwingApplication {
     val insertBeforeButton = new Button(Action("Insert before") {
       val pathToInsertBefore = pretendFileTree.selection.paths.leadSelection
       for (path <- pathToInsertBefore) {
-        val succeeded = pretendFileTree.model.insertBefore(path, PretendFile("new-before-" + path.last.name))
+        val succeeded = if (path.lengthCompare(1)>0) {
+          pretendFileTree.model.insertBefore(path, PretendFile("new-before-" + path.last.name))
+        } else false
         setStatus("Inserting " + (if (succeeded) "succeeded" else "failed"))
       }
     })
@@ -170,7 +172,9 @@ object TreeDemo extends SimpleSwingApplication {
     val insertAfterButton = new Button(Action("Insert after") {
       val pathToInsertAfter = pretendFileTree.selection.paths.leadSelection
       for (path <- pathToInsertAfter) {
-        val succeeded = pretendFileTree.model.insertAfter(path, PretendFile("new-after-" + path.last.name))
+        val succeeded = if (path.lengthCompare(1)>0) {
+          pretendFileTree.model.insertAfter(path, PretendFile("new-after-" + path.last.name))
+        } else false
         setStatus("Inserting " + (if (succeeded) "succeeded" else "failed"))
       }
     })
@@ -178,7 +182,9 @@ object TreeDemo extends SimpleSwingApplication {
     val removeButton = new Button(Action("Remove") {
       val pathToRemove = pretendFileTree.selection.paths.leadSelection
       for (path <- pathToRemove) {
-        val succeeded = pretendFileTree.model remove path
+        val succeeded = if (path.lengthCompare(1)>0) {
+          pretendFileTree.model remove path
+        } else false
         setStatus("Remove " + (if (succeeded) "succeeded" else "failed"))
       }
     })

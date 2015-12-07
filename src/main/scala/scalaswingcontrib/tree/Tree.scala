@@ -163,7 +163,7 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
           "This javax.swing.JTree does not mix in JTreeMixin, and so cannot be used by scala.swing.Tree#Renderer")
       }
 
-      if (treeWrapper.model isRootNode value) {
+      if (treeWrapper.model isHiddenRoot value) {
         new js.JTextField
       } else {
         val a = treeWrapper.model unpackNode value

@@ -93,6 +93,6 @@ trait TreeModel[A] {
   
   def unpackNode(node: Any): A = node.asInstanceOf[A]
 
-  def isRootNode(node: Any): Boolean = node == TreeModel.hiddenRoot
+  private [tree] def isHiddenRoot(node: Any): Boolean = node == TreeModel.hiddenRoot
 }
 

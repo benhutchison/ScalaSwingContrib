@@ -42,6 +42,7 @@ trait TreeModel[A] {
   def update(path: Path[A], newValue: A): Unit
   def remove(pathToRemove: Path[A]): Boolean
   def insertUnder(parentPath: Path[A], newValue: A, index: Int): Boolean
+  def move(pathFrom: Path[A], pathTo: Path[A], indexTo: Int): Boolean
   
   def insertBefore(path: Path[A], newValue: A): Boolean = {
     if (path.isEmpty) throw new IllegalArgumentException("Cannot insert before empty path")

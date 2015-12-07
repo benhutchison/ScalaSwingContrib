@@ -100,6 +100,14 @@ object TreeDemo extends SimpleSwingApplication {
       (pathToRemove) => 
         if (pathToRemove.length >= 2) pathToRemove.last.delete()
         else false
+    }.makeMovableWith {
+      (pathFrom, pathTo, indexTo) =>
+        if (pathFrom.length >= 2 && pathTo.nonEmpty && !(pathTo.last.children contains pathFrom.last)) {
+          if (pathTo contains pathFrom.last) false // prevent cuting target's parent
+          else pathFrom.last.delete() && pathTo.last.insertChild(pathFrom.last, indexTo)
+
+        }
+        else false
     }
 
     listenTo(selection)
@@ -133,7 +141,8 @@ object TreeDemo extends SimpleSwingApplication {
   
   
   class ButtonPanel(pretendFileTree: Tree[PretendFile], setStatus: String => Unit) extends GridPanel(10,1) {
-    
+    var cutPath: Option[Tree.Path[PretendFile]] = None
+
     val updateButton = new Button(Action("Directly update") {
       val pathToRename = pretendFileTree.selection.paths.leadSelection
       for (path <- pathToRename) {
@@ -188,13 +197,34 @@ object TreeDemo extends SimpleSwingApplication {
         setStatus("Remove " + (if (succeeded) "succeeded" else "failed"))
       }
     })
-    
+
+    val cutButton = new Button(Action("Cut") {
+      val pathToMoveFrom = pretendFileTree.selection.paths.leadSelection
+      for (path <- pathToMoveFrom) {
+        val succeeded = if (path.lengthCompare(1)>0) {
+          cutPath = Some(path)
+          true
+        } else false
+        setStatus("Cut " + (if (succeeded) "succeeded" else "failed"))
+      }
+    })
+    val pasteButton = new Button(Action("Paste under") {
+      val pathToMoveTo = pretendFileTree.selection.paths.leadSelection
+      for (path <- pathToMoveTo; cut <- cutPath) {
+        val succeeded = pretendFileTree.model.move(cut, path, 0)
+        if (succeeded) cutPath = None
+        setStatus("Paste " + (if (succeeded) "succeeded" else "failed"))
+      }
+    })
+
     contents += editButton
     contents += updateButton
     contents += insertButton
     contents += insertBeforeButton
     contents += insertAfterButton
     contents += removeButton
+    contents += cutButton
+    contents += pasteButton
   }
 
   

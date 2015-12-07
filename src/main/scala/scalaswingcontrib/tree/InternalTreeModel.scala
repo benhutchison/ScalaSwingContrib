@@ -76,6 +76,14 @@ class InternalTreeModel[A: ClassTag] private (val peer: PeerModel) extends TreeM
     peer.removeNodeFromParent(getPeerNodeAt(pathToRemove))
     true
   }
+
+  def move(pathFrom: Path[A], pathTo: Path[A], indexTo: Int): Boolean = {
+    val node = getPeerNodeAt(pathFrom)
+    peer.removeNodeFromParent(node)
+    peer.insertNodeInto(node, getPeerNodeAt(pathTo), indexTo)
+    true
+  }
+
   
   def map[B: ClassTag](f: A => B): InternalTreeModel[B] = new InternalTreeModel[B] {
     override val peer = copyFromModel(self, f)

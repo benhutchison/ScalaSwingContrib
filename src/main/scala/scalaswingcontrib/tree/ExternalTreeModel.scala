@@ -130,16 +130,14 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
   }
   
   def insertUnder(parentPath: Path[A], newValue: A, index: Int): Boolean = {
-    val succeeded = if (parentPath.nonEmpty) {
-      insertFunc(parentPath, newValue, index)
-    }
-    else { 
-      val (before, after) = rootsVar splitAt index
-      rootsVar = before ::: newValue :: after
-      true 
-    }
-                                                     
+    val succeeded = insertFunc(parentPath, newValue, index)
+
     if (succeeded) {
+      if (parentPath.isEmpty) {
+        val (before, after) = rootsVar splitAt index
+        rootsVar = before ::: newValue :: after
+      }
+
       val actualIndex = siblingsUnder(parentPath) indexOf newValue
       if (actualIndex == -1) return false
         
@@ -155,15 +153,12 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
     val index = siblingsUnder(parentPath) indexOf pathToRemove.last
     if (index == -1) return false
       
-    val succeeded = if (pathToRemove.size == 1) {
-      rootsVar = rootsVar.filterNot(pathToRemove.last == _)
-      true
-    }
-    else {
-      removeFunc(pathToRemove)
-    }
-    
+    val succeeded = removeFunc(pathToRemove)
+
     if (succeeded) {
+      if (pathToRemove.size == 1) {
+        rootsVar = rootsVar.filterNot(pathToRemove.last == _)
+      }
 
       peer.fireNodesRemoved(pathToTreePath(parentPath), pathToRemove.last, index)
     }

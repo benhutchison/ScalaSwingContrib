@@ -162,15 +162,12 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
         case _ => throw new IllegalArgumentException(
           "This javax.swing.JTree does not mix in JTreeMixin, and so cannot be used by scala.swing.Tree#Renderer")
       }
-      value match {
-      
-        // JTree's TreeModel property change will indirectly cause the Renderer 
-        // to be activated on the root node, even if it is permanently hidden; since our underlying root node
-        // is not a suitably-typed A, we need to intercept it and return a harmless component.
-        case TreeModel.hiddenRoot => new js.JTextField
-        case _ => 
-          val a = treeWrapper.model unpackNode value
-          componentFor(treeWrapper, a, CellInfo(isSelected=selected, isExpanded=expanded, isLeaf=leaf, row=rowIndex, hasFocus=focus)).peer
+
+      if (treeWrapper.model isHiddenRoot value) {
+        new js.JTextField
+      } else {
+        val a = treeWrapper.model unpackNode value
+        componentFor(treeWrapper, a, CellInfo(isSelected=selected, isExpanded=expanded, isLeaf=leaf, row=rowIndex, hasFocus=focus)).peer
       }
     }
     

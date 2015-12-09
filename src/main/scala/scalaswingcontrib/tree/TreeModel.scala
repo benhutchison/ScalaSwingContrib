@@ -92,5 +92,7 @@ trait TreeModel[A] {
   def size: Int = depthFirstIterator.size
   
   def unpackNode(node: Any): A = node.asInstanceOf[A]
+
+  private [tree] def isHiddenRoot(node: Any): Boolean = node == TreeModel.hiddenRoot
 }
 

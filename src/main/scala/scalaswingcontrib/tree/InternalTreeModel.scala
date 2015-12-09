@@ -73,6 +73,14 @@ class InternalTreeModel[A] private (val peer: PeerModel) extends TreeModel[A] {
     peer.removeNodeFromParent(getPeerNodeAt(pathToRemove))
     true
   }
+
+  def move(pathFrom: Path[A], pathTo: Path[A], indexTo: Int): Boolean = {
+    val node = getPeerNodeAt(pathFrom)
+    peer.removeNodeFromParent(node)
+    peer.insertNodeInto(node, getPeerNodeAt(pathTo), indexTo)
+    true
+  }
+
   
   def map[B](f: A => B): InternalTreeModel[B] = new InternalTreeModel[B] {
     override val peer = copyFromModel(self, f)
@@ -115,4 +123,6 @@ class InternalTreeModel[A] private (val peer: PeerModel) extends TreeModel[A] {
   def isExternalModel = false
   
   override def unpackNode(node: Any): A = node.asInstanceOf[PeerNode].getUserObject.asInstanceOf[A]
+
+  private[tree] override def isHiddenRoot(node: Any): Boolean = node.asInstanceOf[PeerNode].getUserObject == TreeModel.hiddenRoot
 }

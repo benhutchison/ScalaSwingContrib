@@ -56,7 +56,7 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
   /** 
    * A function to insert a value in the model at a given path, returning whether the operation succeeded.  
    * By default this will throw an exception; to allow insertion on a TreeModel, 
-   * call insertableWith() to provide a new TreeModel with the specified insert method.
+   * call makeInsertableWith() to provide a new TreeModel with the specified insert method.
    */
   protected[tree] val insertFunc: (Path[A], A, Int) => Boolean = {
     (_,_,_) => throw new UnsupportedOperationException("Insert is not supported on this tree")
@@ -65,12 +65,22 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
   /** 
    * A function to remove a item in the model at a given path, returning whether the operation succeeded.  
    * By default this will throw an exception; to allow removal from a TreeModel, 
-   * call removableWith() to provide a new TreeModel with the specified remove method.
+   * call makeRemovableWith() to provide a new TreeModel with the specified remove method.
    */
   protected[tree] val removeFunc: Path[A] => Boolean = {
     _ => throw new UnsupportedOperationException("Removal is not supported on this tree")
   }
-  
+
+  /**
+    * A function to move a value in the model from a given path to at a given path, returning whether the operation
+    * succeeded.
+    * By default this will throw an exception; to allow insertion on a TreeModel,
+    * call makeInsertableWith() to provide a new TreeModel with the specified insert method.
+    */
+  protected[tree] val moveFunc: (Path[A], Path[A], Int) => Boolean = {
+    (_,_,_) => throw new UnsupportedOperationException("Move is not supported on this tree")
+  }
+
   /**
    * Returns a new VirtualTreeModel that knows how to modify the underlying representation, 
    * using the given function to replace one value with another.   
@@ -81,6 +91,7 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
     override val updateFunc = effectfulUpdate
     override val insertFunc = self.insertFunc
     override val removeFunc = self.removeFunc
+    override val moveFunc = self.moveFunc
     this.peer copyListenersFrom self.peer
   }
 
@@ -88,6 +99,7 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
     override val updateFunc = self.updateFunc
     override val insertFunc = effectfulInsert
     override val removeFunc = self.removeFunc
+    override val moveFunc = self.moveFunc
     this.peer copyListenersFrom self.peer
   }
   
@@ -95,9 +107,18 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
     override val updateFunc = self.updateFunc
     override val insertFunc = self.insertFunc
     override val removeFunc = effectfulRemove
+    override val moveFunc = self.moveFunc
     this.peer copyListenersFrom self.peer
   }
-  
+
+  def makeMovableWith(effectfulMove: (Path[A], Path[A], Int) => Boolean): ExternalTreeModel[A] = new ExternalTreeModel(roots, children) {
+    override val updateFunc = self.updateFunc
+    override val insertFunc = self.insertFunc
+    override val removeFunc = self.removeFunc
+    override val moveFunc = effectfulMove
+    this.peer copyListenersFrom self.peer
+  }
+
   /**
    * Replaces one value with another, mutating the underlying structure.  
    * If a way to modify the external tree structure has not been provided with makeUpdatableWith(), then
@@ -162,6 +183,32 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
 
       peer.fireNodesRemoved(pathToTreePath(parentPath), pathToRemove.last, index)
     }
+    succeeded
+  }
+
+  def move(pathFrom: Path[A], pathTo: Path[A], indexTo: Int): Boolean = {
+    if (pathFrom.isEmpty || pathTo.isEmpty) return false
+
+    val parentPath = pathFrom.init
+    val index = siblingsUnder(parentPath) indexOf pathFrom.last
+    if (index == -1) return false
+
+    val succeeded = moveFunc(pathFrom, pathTo, indexTo)
+    if (succeeded) {
+
+      if (pathTo.isEmpty) {
+        val (before, after) = rootsVar splitAt index
+        rootsVar = before ::: pathFrom.last :: after
+      }
+
+      val actualIndex = siblingsUnder(pathTo) indexOf pathFrom.last
+      if (actualIndex == -1) return false
+
+      // we could also consider find a common path and firing peer.fireTreeStructureChanged instead
+      peer.fireNodesRemoved(pathToTreePath(parentPath), pathFrom.last, index)
+      peer.fireNodesInserted(pathToTreePath(pathTo), pathFrom.last, actualIndex)
+    }
+
     succeeded
   }
 

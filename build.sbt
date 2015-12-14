@@ -1,16 +1,12 @@
-import SonatypeKeys._
-
 name := "ScalaSwingContrib"
 
 organization := "com.github.benhutchison"
 
-version := "1.5"
+version := "1.6"
 
-scalaVersion := "2.11.0"
+scalaVersion := "2.11.7"
 
-sonatypeSettings
-
-profileName := "com.github.benhutchison"
+sonatypeProfileName := "com.github.benhutchison"
 
 libraryDependencies ++= {
   val sv = scalaVersion.value
@@ -30,7 +26,7 @@ libraryDependencies ++= Seq(
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-crossScalaVersions := Seq("2.10.4", "2.11.0")
+crossScalaVersions := Seq("2.10.4", "2.11.7")
 
 // Following settings taken from: 
 //https://github.com/sbt/sbt.github.com/blob/gen-master/src/jekyll/using_sonatype.md
@@ -53,7 +49,7 @@ publishArtifact in Test := false
 
 pomIncludeRepository := { _ => false }
 
-pomExtra := (
+pomExtra in Global := (
   <url>http://github.com/benhutchison/ScalaSwingContrib</url>
   <licenses>
     <license>

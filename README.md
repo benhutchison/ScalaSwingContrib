@@ -16,15 +16,30 @@ All classes reside in the `scalaswingcontrib` package namespace.
 ScalaSwingContrib is derived from <https://github.com/kenbot/scala-swing> and <https://github.com/ingoem/scala-swing/pulls>, 
 and is maintained by Ben Hutchison and Ken Scambler.
 
-ScalaSwingContrib is built with SBT: `sbt package`
+### Changelog
+
+`1.4`: Not Recorded
+`1.5` April 2013: Fixes/enhancements to Tree (thanks @Sciss) 
+`1.6` Dec 2015: Fixes/enhancements to Tree (thanks @OndrejSpanel)    
 
 ### Maven details
 
-`1.5` is Cross-built for `2.10.4` and `2.11.0`:
+`1.6` is Cross-built for `2.10.4` and `2.11.7`:
 
     "com.github.benhutchison" %% "scalaswingcontrib" % "1.5"
 
 Version `1.4` is built with Scala `2.10.1`. `1.3` is built with Scala `2.9.2`.
+
+### Publishing Instructions
+
+Ensure sonatype credentials at `$HOME/.sbt/(sbt-version)/sonatype.sbt` 
+[More info](https://github.com/xerial/sbt-sonatype#homesbtsbt-versionsonatypesbt)
+
+`+publishSigned`
+
+`sonatypeRelease`
+
+### Other
 
 Bug reports and pull requests welcome. 
 

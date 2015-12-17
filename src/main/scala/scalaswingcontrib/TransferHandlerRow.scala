@@ -8,7 +8,7 @@ import javax.swing.JTable.DropLocation
 import javax.swing._
 
 import scala.reflect.ClassTag
-import scalaswingcontrib.tree.{ExternalTreeModel, Tree}
+import scalaswingcontrib.tree.Tree
 
 // adapted from http://stackoverflow.com/a/4769575/16673
 
@@ -141,34 +141,13 @@ class TransferRowContainerTree[A](override val container: Tree[A]) extends Trans
     // import container._ // shorter code, but perhaps dangerous conversions?
     val pathFrom = tree.treePathToPath(tree.peer.getPathForRow(rowFrom.row))
     val pathTo = tree.treePathToPath(dl.getPath)
-    val inserted = if (dl.getChildIndex >= 0) {
+    if (dl.getChildIndex >= 0) {
       // DropMode.ON - path is the node
-      tree.model.insertUnder(pathTo, pathFrom.last, dl.getChildIndex)
+      tree.model.move(pathFrom, pathTo, dl.getChildIndex)
     } else {
       //DropMode.INSERT
-      tree.model.insertUnder(pathTo, pathFrom.last, tree.model.getChildrenOf(pathTo).size)
+      tree.model.move(pathFrom, pathTo, tree.model.getChildrenOf(pathTo).size)
     }
-    // insert failed can mean a move was performed (node not found after move)
-    // beware: at this point the tree contains the same node twice
-    if (inserted) {
-      tree.model.remove(pathFrom)
-      // TODO: is delete failure possible? Should we handle it?
-    }
-    // TODO: use move interface instead once available
-    tree.model match {
-      case ext: ExternalTreeModel[A] =>
-        if (pathFrom.startsWith(pathTo) || pathTo.startsWith(pathFrom)) {
-          // fire structure change, insertion has performed a move
-          // fire for the shorter, but update the whole subtree
-          val prefix = (pathFrom zip pathTo).map(_._1)
-          ext.peer.fireTreeStructureChanged(ext.pathToTreePath(prefix.dropRight(1)), null)
-        } else {
-          // independent changes, fire them both
-          //ext.peer.fireTreeStructureChanged(ext.pathToTreePath(pathTo), null)
-          //ext.peer.fireTreeStructureChanged(ext.pathToTreePath(pathFrom), null)
-        }
-    }
-    true
   }
 }
 

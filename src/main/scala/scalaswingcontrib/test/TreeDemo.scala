@@ -97,7 +97,8 @@ object TreeDemo extends SimpleSwingApplication {
         if (parentPath.isEmpty) false
         else {
           val parentDir = parentPath.last
-          if (parentDir.children contains fileToInsert) false
+          if (parentPath contains fileToInsert) false
+          else if (parentDir.children contains fileToInsert) false
           else parentDir.insertChild(fileToInsert.copy(), index)
         }
       

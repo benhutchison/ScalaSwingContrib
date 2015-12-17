@@ -1,6 +1,8 @@
 package scalaswingcontrib
 package test
 
+import javax.swing.DropMode
+
 import scala.xml.{Node, XML}
 import scala.swing.{Button, Label, SimpleSwingApplication, Dimension, Component,
                     Action, GridPanel, MainFrame, TabbedPane, BorderPanel, ScrollPane, Swing}
@@ -77,9 +79,12 @@ object TreeDemo extends SimpleSwingApplication {
   }
 
 
-
   // Use case 5: Mutable external tree model
   val mutableExternalTree = new Tree[PretendFile] {
+    peer.setDragEnabled(true)
+    peer.setDropMode(DropMode.ON_OR_INSERT)
+    object treeClipboard extends ClipboardCallbacks
+    peer.setTransferHandler(new TreeTransferHandlerRow(this, treeClipboard))
 
     model = ExternalTreeModel(pretendFileSystem)(_.children).makeUpdatableWith {
       (pathOfFile, updatedFile) =>       
@@ -93,7 +98,7 @@ object TreeDemo extends SimpleSwingApplication {
         else {
           val parentDir = parentPath.last
           if (parentDir.children contains fileToInsert) false
-          else parentDir.insertChild(fileToInsert, index)
+          else parentDir.insertChild(fileToInsert.copy(), index)
         }
       
     }.makeRemovableWith {
@@ -304,6 +309,9 @@ object TreeDemo extends SimpleSwingApplication {
       def rename(str: String): Boolean = if (siblingExists(str)) false 
                                          else { nameVar = str; true }
 
+      def copy() = {
+        PretendFile(nameVar, childBuffer: _*)
+      }
       def insertChild(child: PretendFile, index: Int): Boolean = {
         if (!isDirectory) false
         else if (childExists(child.name)) false 

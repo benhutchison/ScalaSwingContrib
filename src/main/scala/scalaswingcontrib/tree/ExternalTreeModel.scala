@@ -193,7 +193,8 @@ class ExternalTreeModel[A: ClassTag](rootItems: collection.Seq[A], children: A =
     if (pathFrom.isEmpty || pathTo.isEmpty) return false
 
     val parentPath = pathFrom.init
-    val index = siblingsUnder(parentPath) indexOf pathFrom.last
+    val under = siblingsUnder(parentPath)
+    val index = under indexOf pathFrom.last
     if (index == -1) return false
 
     val succeeded = moveFunc(pathFrom, pathTo, indexTo)

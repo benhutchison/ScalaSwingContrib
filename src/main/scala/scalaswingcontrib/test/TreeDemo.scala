@@ -310,8 +310,12 @@ object TreeDemo extends SimpleSwingApplication {
       def rename(str: String): Boolean = if (siblingExists(str)) false 
                                          else { nameVar = str; true }
 
-      def copy() = {
-        PretendFile(nameVar, childBuffer: _*)
+      def copy(): PretendFile = {
+        // no need to copy children, this is in fact a move, not a copy
+        val ret = PretendFile(nameVar, childBuffer: _*)
+        // but we need to notify them about a new parent
+        ret.childBuffer foreach (_.parent = Some(ret))
+        ret
       }
       def insertChild(child: PretendFile, index: Int): Boolean = {
         if (!isDirectory) false

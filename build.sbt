@@ -2,9 +2,9 @@ name := "ScalaSwingContrib"
 
 organization := "com.github.benhutchison"
 
-version := "1.6"
+version := "1.7"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.12.0"
 
 sonatypeProfileName := "com.github.benhutchison"
 
@@ -14,19 +14,20 @@ libraryDependencies ++= {
     Seq("org.scala-lang" % "scala-swing" % sv)
   else
     Seq(
-      "org.scala-lang.modules" %% "scala-swing" % "1.0.1",
-      "org.scala-lang.modules" %% "scala-xml" % "1.0.1"
+      "org.scala-lang.modules" %% "scala-swing" % "2.0.0-M2",
+      "org.scala-lang.modules" %% "scala-xml" % "1.0.5"
     )
 }
 
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "2.3.11" % "test",
+  "org.specs2" %% "specs2-core" % "3.8.6" % "test",
+  "org.specs2" %% "specs2-junit" % "3.8.6" % "test",
   "junit" % "junit" % "4.7" % "test"
 )
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-crossScalaVersions := Seq("2.10.4", "2.11.7")
+crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0")
 
 // Following settings taken from: 
 //https://github.com/sbt/sbt.github.com/blob/gen-master/src/jekyll/using_sonatype.md

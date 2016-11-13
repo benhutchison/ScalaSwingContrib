@@ -80,7 +80,8 @@ sealed trait TreeEditors extends EditableCellsCompanion {
 
   /**
    * A tree cell editor.
-   * @see javax.swing.tree.TreeCellEditor
+    *
+    * @see javax.swing.tree.TreeCellEditor
    */
   abstract class Editor[A] extends CellEditor[A] {
     import Editor._
@@ -148,7 +149,8 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
   /**
    * Base trait of Tree cell renderers, in which the user provides the rendering component 
    * by overriding the componentFor() method.
-   * @see javax.swing.tree.TreeCellRenderer
+    *
+    * @see javax.swing.tree.TreeCellRenderer
    */
   trait Renderer[-A] extends CellRenderer[A] {
     import Renderer._
@@ -219,16 +221,24 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
   /**
   * Default renderer for a tree, with many configurable settings.
   */
-  class DefaultRenderer[-A] extends Label with Renderer[A] { 
-    override lazy val peer = new jst.DefaultTreeCellRenderer with SuperMixin { peerThis =>
+  class DefaultRenderer[-A] extends Label with Renderer[A] {
+
+    trait DefaultRendererPeer extends jst.DefaultTreeCellRenderer with SuperMixin {
+
+      def defaultRendererComponent(tree: js.JTree, value: AnyRef, isSelected: Boolean, isExpanded: Boolean,
+        isLeaf: Boolean, row: Int, hasFocus: Boolean): java.awt.Component
+
+    }
+
+    override lazy val peer: DefaultRendererPeer = new DefaultRendererPeer { peerThis =>
       override def getTreeCellRendererComponent(tree: js.JTree, value: AnyRef, isSelected: Boolean, isExpanded: Boolean, 
                                              isLeaf: Boolean, row: Int, hasFocus: Boolean): js.JComponent = {
         dispatchToScalaRenderer(tree, value, isSelected, isExpanded, isLeaf, row, hasFocus)
         peerThis
       }
       
-      def defaultRendererComponent(tree: js.JTree, value: AnyRef, isSelected: Boolean, isExpanded: Boolean, 
-                                             isLeaf: Boolean, row: Int, hasFocus: Boolean) {
+      def defaultRendererComponent(
+        tree: js.JTree, value: AnyRef, isSelected: Boolean, isExpanded: Boolean, isLeaf: Boolean, row: Int, hasFocus: Boolean): java.awt.Component = {
         super.getTreeCellRendererComponent(tree, value, isSelected, isExpanded, isLeaf, row, hasFocus)
       }
     }

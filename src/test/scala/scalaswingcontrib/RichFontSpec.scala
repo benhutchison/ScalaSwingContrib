@@ -15,7 +15,7 @@ class RichFontSpec extends Specification {
   val largerFont = new Font("Dialog", Font.PLAIN, 18)
   val smallerFont = new Font("Dialog", Font.PLAIN, 10)
 
-  {font.adjustSizePercent(150) mustEqual largerFont}.eg
+  eg {font.adjustSizePercent(150) mustEqual largerFont}
   
-  {font.adjustSizePercent(90) mustEqual smallerFont}.eg
+  eg {font.adjustSizePercent(90) mustEqual smallerFont}
 }

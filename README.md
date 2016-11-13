@@ -20,13 +20,14 @@ and is maintained by Ben Hutchison and Ken Scambler.
 
 `1.4`: Not Recorded
 `1.5` April 2013: Fixes/enhancements to Tree (thanks @Sciss) 
-`1.6` Dec 2015: Fixes/enhancements to Tree (thanks @OndrejSpanel)    
+`1.6` Dec 2015: Fixes/enhancements to Tree (thanks @OndrejSpanel)   
+`1.7` Nov 2016: Scala 2.12, library upgrades, jdk8 only 
 
 ### Maven details
 
-`1.6` is Cross-built for `2.10.4` and `2.11.7`:
+`1.7` is Cross-built for `2.10.6`, `2.11.8`, `2.12.0`:
 
-    "com.github.benhutchison" %% "scalaswingcontrib" % "1.5"
+    "com.github.benhutchison" %% "scalaswingcontrib" % "1.7"
 
 Version `1.4` is built with Scala `2.10.1`. `1.3` is built with Scala `2.9.2`.
 

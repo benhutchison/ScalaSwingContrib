@@ -18,10 +18,10 @@ and is maintained by Ben Hutchison and Ken Scambler.
 
 ### Changelog
 
-`1.4`: Not Recorded
-`1.5` April 2013: Fixes/enhancements to Tree (thanks @Sciss) 
-`1.6` Dec 2015: Fixes/enhancements to Tree (thanks @OndrejSpanel)   
-`1.7` Nov 2016: Scala 2.12, library upgrades, jdk8 only 
+- `1.4`: Not Recorded
+- `1.5` April 2013: Fixes/enhancements to Tree (thanks @Sciss) 
+- `1.6` Dec 2015: Fixes/enhancements to Tree (thanks @OndrejSpanel)   
+- `1.7` Nov 2016: Scala 2.12, library upgrades, jdk8 only 
 
 ### Maven details
 

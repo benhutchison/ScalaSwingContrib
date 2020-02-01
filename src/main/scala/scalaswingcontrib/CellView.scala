@@ -24,15 +24,15 @@ trait CellView[+A] {
     * Allows querying and modification of the current selection state, for some unique coordinate S.
     * There may be more than one selection set supporting different coordinates, such as rows and columns.
     */
-    protected abstract class SelectionSet[S](a: => Seq[S]) extends mutable.Set[S] { 
-      def -=(s: S): this.type 
-      def +=(s: S): this.type
-      def --=(ss: Seq[S]): this.type 
-      def ++=(ss: Seq[S]): this.type
+    protected abstract class SelectionSet[S](a: => collection.Seq[S]) extends MutableSet[S] {
+      def subtractOne(s: S): this.type
+      def addOne(s: S): this.type
+      def --=(ss: collection.Seq[S]): this.type
+      def ++=(ss: collection.Seq[S]): this.type
       override def size = nonNullOrEmpty(a).length
       def contains(s: S) = nonNullOrEmpty(a) contains s
       def iterator = nonNullOrEmpty(a).iterator
-      protected def nonNullOrEmpty[A1](s: Seq[A1]) = if (s != null) s else Seq.empty
+      protected def nonNullOrEmpty[A1](s: collection.Seq[A1]) = if (s != null) s else Seq.empty
     }
     
     /**

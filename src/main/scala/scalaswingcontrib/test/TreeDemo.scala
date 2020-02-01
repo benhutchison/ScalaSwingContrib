@@ -52,11 +52,11 @@ object TreeDemo extends SimpleSwingApplication {
     } 
 
     renderer = Renderer({
-      case Order(id, _, _, 1) => "Order #" + id
-      case Order(id, _, _, qty) => "Order #" + id + " x " + qty
+      case Order(id, _, _, 1) => "Order #" + id.toString
+      case Order(id, _, _, qty) => "Order #" + id.toString + " x " + qty.toString
       case Product(id, _, _) => "Product " + id
       case Customer(_, title, first, last) => title + " " + first + " " + last
-      case (field, value) => field + ": " + value
+      case (field, value) => field.toString + ": " + value.toString
       case x => x.toString
     })
 
@@ -289,7 +289,7 @@ object TreeDemo extends SimpleSwingApplication {
                                                      
       def siblingExists(siblingName: String) = parent.exists(_ childExists siblingName)
       def childExists(childName: String) = children.exists(_.name == childName)
-      def children: Seq[PretendFile] = childBuffer
+      def children: collection.Seq[PretendFile] = childBuffer
       def isDirectory = children.nonEmpty
     }
     

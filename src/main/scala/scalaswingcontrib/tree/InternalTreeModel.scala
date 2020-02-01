@@ -4,15 +4,18 @@ package tree
 import javax.swing.{tree => jst}
 import Tree.Path
 import TreeModel.hiddenRoot
-import scala.collection.JavaConversions.enumerationAsScalaIterator
+
+import scala.collection.JavaConverters._
 import InternalTreeModel.{PeerModel, PeerNode}
-import scala.collection.breakOut
+
+import scala.collection.Seq
+import scala.reflect.ClassTag // make general Seq the default even for 2.13
 
 object InternalTreeModel {
   
-  def empty[A] = new InternalTreeModel[A](new PeerModel(new jst.DefaultMutableTreeNode(hiddenRoot)))
+  def empty[A: ClassTag] = new InternalTreeModel[A](new PeerModel(new jst.DefaultMutableTreeNode(hiddenRoot)))
   
-  def apply[A](roots: A*)(children: A => Seq[A]): InternalTreeModel[A] = {
+  def apply[A: ClassTag](roots: A*)(children: A => Seq[A]): InternalTreeModel[A] = {
     def createNode(a: A): PeerNode = {
       val node = new PeerNode(a)
       children(a) map createNode foreach node.add
@@ -30,7 +33,7 @@ object InternalTreeModel {
 }
 
 
-class InternalTreeModel[A] private (val peer: PeerModel) extends TreeModel[A] { 
+class InternalTreeModel[A: ClassTag] private (val peer: PeerModel) extends TreeModel[A] {
   self =>
     
   def this() = this(new PeerModel(new PeerNode(hiddenRoot)))
@@ -49,14 +52,14 @@ class InternalTreeModel[A] private (val peer: PeerModel) extends TreeModel[A] {
 
   def treePathToPath(tp: jst.TreePath): Path[A] = {
     if (tp == null) null 
-    else ((tp.getPath map unpackNode)(breakOut): Path[A]).tail
+    else ((tp.getPath map unpackNode).toIndexedSeq).tail
   } 
   
   private def rootPeerNode = peer.getRoot.asInstanceOf[PeerNode]
 
   def roots: Seq[A] = getNodeChildren(rootPeerNode) map unpackNode
   
-  def update(path: Path[A], newValue: A) {
+  def update(path: Path[A], newValue: A): Unit = {
     peer.valueForPathChanged(pathToTreePath(path), newValue)
   }
 
@@ -74,7 +77,7 @@ class InternalTreeModel[A] private (val peer: PeerModel) extends TreeModel[A] {
     true
   }
   
-  def map[B](f: A => B): InternalTreeModel[B] = new InternalTreeModel[B] {
+  def map[B: ClassTag](f: A => B): InternalTreeModel[B] = new InternalTreeModel[B] {
     override val peer = copyFromModel(self, f)
   }
 
@@ -93,7 +96,7 @@ class InternalTreeModel[A] private (val peer: PeerModel) extends TreeModel[A] {
     new jst.DefaultTreeModel(rootNode)
   }
   
-  private def getNodeChildren(node: PeerNode): Seq[PeerNode] = node.children.toSeq.asInstanceOf[Seq[PeerNode]]
+  private def getNodeChildren(node: PeerNode): Seq[PeerNode] = node.children.asScala.toSeq.asInstanceOf[Seq[PeerNode]]
   
   def getChildrenOf(parentPath: Path[A]): Seq[A] = {
     val lastNode = pathToTreePath(parentPath).getLastPathComponent.asInstanceOf[PeerNode]

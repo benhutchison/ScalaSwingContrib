@@ -6,7 +6,7 @@ import Utils._
 
 class RichColor(color: Color) {
 
-  def toHexString = "#" + Integer.toHexString(color.getRGB()).substring(2)
+  def toHexString = "#" + Integer.toHexString(color.getRGB).substring(2)
 
   def *(scale: Int) = mapRgbComponents(_ * scale)
 
@@ -56,15 +56,15 @@ class RichColor(color: Color) {
   
 
   def mapRgbComponents(f: (Int)=>Int) = {
-    val f2 = f.andThen(clamp _)
-    new Color(f2(color.getRed()), f2(color.getGreen()), f2(color.getBlue()))
+    val f2 = f.andThen(clamp)
+    new Color(f2(color.getRed), f2(color.getGreen), f2(color.getBlue))
   }
 
-  def rgbComponents = Seq(color.getRed(), color.getGreen(), color.getBlue())
+  def rgbComponents = Seq(color.getRed, color.getGreen, color.getBlue)
 
   private def clamp(i: Int) = (0 max i) min 255
 
-  private def ensureZeroToOne(value: Double) {assert(value >= 0 && value <= 1.0)}
+  private def ensureZeroToOne(value: Double): Unit = {assert(value >= 0 && value <= 1.0)}
 
   def toRichString = "RichColor(R: "+color.getRed+", G: "+color.getGreen+", B: "+color.getBlue+"/H: "+hue+", S: "+saturation+", B: "+brightness+")"
 }

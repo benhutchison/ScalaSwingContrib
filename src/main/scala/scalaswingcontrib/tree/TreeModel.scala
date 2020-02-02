@@ -4,6 +4,8 @@ package tree
 import Tree.Path
 import javax.swing.{tree => jst}
 
+import scala.reflect.ClassTag
+
 object TreeModel {
   
   /**
@@ -12,20 +14,20 @@ object TreeModel {
    */
   private[tree] case object hiddenRoot
   
-  def empty[A]: TreeModel[A] = new ExternalTreeModel[A](Seq.empty, _ => Seq.empty)
-  def apply[A](roots: A*)(children: A => Seq[A]): TreeModel[A] = new ExternalTreeModel(roots, children)
+  def empty[A: ClassTag]: TreeModel[A] = new ExternalTreeModel[A](Seq.empty, _ => Seq.empty)
+  def apply[A: ClassTag](roots: A*)(children: A => Seq[A]): TreeModel[A] = new ExternalTreeModel(roots, children)
 }
 
 
 trait TreeModel[A] {
   
-  def roots: Seq[A]
+  def roots: collection.Seq[A]
   val peer: jst.TreeModel 
-  def getChildrenOf(parentPath: Path[A]): Seq[A]
-  def getChildPathsOf(parentPath: Path[A]): Seq[Path[A]] = getChildrenOf(parentPath).map(parentPath :+ _)
+  def getChildrenOf(parentPath: Path[A]): collection.Seq[A]
+  def getChildPathsOf(parentPath: Path[A]): collection.Seq[Path[A]] = getChildrenOf(parentPath).map(parentPath :+ _)
   def filter(p: A => Boolean): TreeModel[A]
-  def map[B](f: A => B): TreeModel[B]
-  def foreach[U](f: A => U) { depthFirstIterator foreach f }
+  def map[B: ClassTag](f: A => B): TreeModel[B]
+  def foreach[U](f: A => U): Unit = { depthFirstIterator foreach f }
   def isExternalModel: Boolean
   def toInternalModel: InternalTreeModel[A]
   
@@ -79,11 +81,11 @@ trait TreeModel[A] {
   }
   
   def breadthFirstIterator: Iterator[A] = new TreeIterator {
-    override def pushChildren(path: Path[A]) { openNodes ++= getChildPathsOf(path).toIterator }
+    override def pushChildren(path: Path[A]): Unit = { openNodes ++= getChildPathsOf(path).toIterator }
   }
   
   def depthFirstIterator: Iterator[A] = new TreeIterator {
-    override def pushChildren(path: Path[A]) {
+    override def pushChildren(path: Path[A]): Unit = {
       val open = openNodes
       openNodes = getChildPathsOf(path).toIterator ++ open // ++'s argument is by-name, and should not directly pass in a var
     }

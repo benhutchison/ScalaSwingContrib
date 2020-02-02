@@ -26,7 +26,7 @@ class ColorChooser(initialColor: Color) extends Component {
   override lazy val peer: js.JColorChooser =  new js.JColorChooser(initialColor) with SuperMixin
 
   peer.getSelectionModel().addChangeListener(new jse.ChangeListener {
-    def stateChanged(e: jse.ChangeEvent) { 
+    def stateChanged(e: jse.ChangeEvent): Unit = {
       publish( new ColorChangeEvent(peer.getColor)) 
     }
   })

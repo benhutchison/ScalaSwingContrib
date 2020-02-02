@@ -2,28 +2,31 @@ package scalaswingcontrib
 package tree
 
 import Tree.Path
+
 import scala.collection.mutable
-import javax.swing.{tree => jst, event => jse}
+import javax.swing.{event => jse, tree => jst}
+
+import scala.reflect.ClassTag
 
 object ExternalTreeModel {
-  def empty[A]: ExternalTreeModel[A] = new ExternalTreeModel[A](Seq.empty, _ => Seq.empty)
-  def apply[A](roots: A*)(children: A => Seq[A]): ExternalTreeModel[A] =
+  def empty[A: ClassTag]: ExternalTreeModel[A] = new ExternalTreeModel[A](Seq.empty, _ => Seq.empty)
+  def apply[A: ClassTag](roots: A*)(children: A => collection.Seq[A]): ExternalTreeModel[A] =
     new ExternalTreeModel(roots, children)
 }
 
 /**
  * Represents tree data as a sequence of root nodes, and a function that can retrieve child nodes.  
  */
-class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends TreeModel[A] {
+class ExternalTreeModel[A: ClassTag](rootItems: collection.Seq[A], children: A => collection.Seq[A]) extends TreeModel[A] {
   self =>
   
   import TreeModel._
   
-  private var rootsVar = List(rootItems: _*)
+  private var rootsVar = rootItems.toList
   
   def roots: Seq[A] = rootsVar
   
-  def getChildrenOf(parentPath: Path[A]): Seq[A] = if (parentPath.isEmpty) roots 
+  def getChildrenOf(parentPath: Path[A]): collection.Seq[A] = if (parentPath.isEmpty) roots
                                                    else children(parentPath.last)
   
   def filter(p: A => Boolean): ExternalTreeModel[A] =
@@ -33,7 +36,7 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
   
   def isExternalModel = true
   
-  def map[B](f: A => B): InternalTreeModel[B] = toInternalModel map f
+  def map[B: ClassTag](f: A => B): InternalTreeModel[B] = toInternalModel map f
   
   def pathToTreePath(path: Path[A]): jst.TreePath = {
     val array = (hiddenRoot +: path).map(_.asInstanceOf[AnyRef]).toArray
@@ -42,7 +45,7 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
   
   def treePathToPath(tp: jst.TreePath): Path[A] = {
     if (tp == null) null 
-    else tp.getPath.map(_.asInstanceOf[A]).tail.toIndexedSeq
+    else tp.getPath.asInstanceOf[Array[A]].tail.toIndexedSeq
   } 
   
   /** 
@@ -103,7 +106,7 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
    * If a way to modify the external tree structure has not been provided with makeUpdatableWith(), then
    * an exception will be thrown.
    */
-  def update(path: Path[A], newValue: A) {
+  def update(path: Path[A], newValue: A): Unit = {
     if (path.isEmpty) throw new IllegalArgumentException("Cannot update an empty path")
     
     val existing = path.last
@@ -187,21 +190,21 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
     def isLeaf(node: Any): Boolean = getChildrenOf(node).isEmpty
     
     
-    private[tree] def copyListenersFrom(otherPeer: ExternalTreeModel[A]#ExternalTreeModelPeer) {
+    private[tree] def copyListenersFrom(otherPeer: ExternalTreeModel[A]#ExternalTreeModelPeer): Unit = {
       otherPeer.treeModelListeners foreach addTreeModelListener
     }
     
-    def treeModelListeners: Seq[jse.TreeModelListener] = treeModelListenerList
+    def treeModelListeners: collection.Seq[jse.TreeModelListener] = treeModelListenerList
     
-    def addTreeModelListener(tml: jse.TreeModelListener) {
+    def addTreeModelListener(tml: jse.TreeModelListener): Unit = {
       treeModelListenerList += tml
     }
     
-    def removeTreeModelListener(tml: jse.TreeModelListener) {
+    def removeTreeModelListener(tml: jse.TreeModelListener): Unit = {
       treeModelListenerList -= tml
     }
     
-    def valueForPathChanged(path: jst.TreePath, newValue: Any) {
+    def valueForPathChanged(path: jst.TreePath, newValue: Any): Unit = {
       update(treePathToPath(path), newValue.asInstanceOf[A])
     }
     
@@ -214,20 +217,20 @@ class ExternalTreeModel[A](rootItems: Seq[A], children: A => Seq[A]) extends Tre
       new jse.TreeModelEvent(this, parentPath, Array(index), Array(newValue.asInstanceOf[AnyRef]))
     }
     
-    def fireTreeStructureChanged(parentPath: jst.TreePath, newValue: Any) {
+    def fireTreeStructureChanged(parentPath: jst.TreePath, newValue: Any): Unit = {
       treeModelListenerList foreach { _ treeStructureChanged createEvent(parentPath, newValue) }
     }
     
-    def fireNodesChanged(parentPath: jst.TreePath, newValue: Any) {
+    def fireNodesChanged(parentPath: jst.TreePath, newValue: Any): Unit = {
       treeModelListenerList foreach { _ treeNodesChanged createEvent(parentPath, newValue) }
     }
     
-    def fireNodesInserted(parentPath: jst.TreePath, newValue: Any, index: Int) {
+    def fireNodesInserted(parentPath: jst.TreePath, newValue: Any, index: Int): Unit = {
       def createEvent = createEventWithIndex(parentPath, newValue, index)
       treeModelListenerList foreach { _ treeNodesInserted createEvent }
     }
     
-    def fireNodesRemoved(parentPath: jst.TreePath, removedValue: Any, index: Int) {
+    def fireNodesRemoved(parentPath: jst.TreePath, removedValue: Any, index: Int): Unit = {
       def createEvent = createEventWithIndex(parentPath, removedValue, index)
       treeModelListenerList foreach { _ treeNodesRemoved createEvent }
     }

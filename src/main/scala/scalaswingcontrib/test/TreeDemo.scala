@@ -1,6 +1,8 @@
 package scalaswingcontrib
 package test
 
+import javax.swing.DropMode
+
 import scala.xml.{Node, XML}
 import scala.swing.{Button, Label, SimpleSwingApplication, Dimension, Component,
                     Action, GridPanel, MainFrame, TabbedPane, BorderPanel, ScrollPane, Swing}
@@ -77,9 +79,12 @@ object TreeDemo extends SimpleSwingApplication {
   }
 
 
-
   // Use case 5: Mutable external tree model
   val mutableExternalTree = new Tree[PretendFile] {
+    peer.setDragEnabled(true)
+    peer.setDropMode(DropMode.ON_OR_INSERT)
+    object treeClipboard extends ClipboardCallbacks
+    peer.setTransferHandler(new TreeTransferHandlerRow(this, treeClipboard))
 
     model = ExternalTreeModel(pretendFileSystem)(_.children).makeUpdatableWith {
       (pathOfFile, updatedFile) =>       
@@ -92,13 +97,22 @@ object TreeDemo extends SimpleSwingApplication {
         if (parentPath.isEmpty) false
         else {
           val parentDir = parentPath.last
-          if (parentDir.children contains fileToInsert) false
-          else parentDir.insertChild(fileToInsert, index)
+          if (parentPath contains fileToInsert) false
+          else if (parentDir.children contains fileToInsert) false
+          else parentDir.insertChild(fileToInsert.copy(), index)
         }
       
     }.makeRemovableWith {
       (pathToRemove) => 
         if (pathToRemove.length >= 2) pathToRemove.last.delete()
+        else false
+    }.makeMovableWith {
+      (pathFrom, pathTo, indexTo) =>
+        if (pathFrom.length >= 2 && pathTo.nonEmpty && !(pathTo.last.children contains pathFrom.last)) {
+          if (pathTo contains pathFrom.last) false // prevent cuting target's parent
+          else pathFrom.last.delete() && pathTo.last.insertChild(pathFrom.last, indexTo)
+
+        }
         else false
     }
 
@@ -133,7 +147,8 @@ object TreeDemo extends SimpleSwingApplication {
   
   
   class ButtonPanel(pretendFileTree: Tree[PretendFile], setStatus: String => Unit) extends GridPanel(10,1) {
-    
+    var cutPath: Option[Tree.Path[PretendFile]] = None
+
     val updateButton = new Button(Action("Directly update") {
       val pathToRename = pretendFileTree.selection.paths.leadSelection
       for (path <- pathToRename) {
@@ -188,13 +203,34 @@ object TreeDemo extends SimpleSwingApplication {
         setStatus("Remove " + (if (succeeded) "succeeded" else "failed"))
       }
     })
-    
+
+    val cutButton = new Button(Action("Cut") {
+      val pathToMoveFrom = pretendFileTree.selection.paths.leadSelection
+      for (path <- pathToMoveFrom) {
+        val succeeded = if (path.lengthCompare(1)>0) {
+          cutPath = Some(path)
+          true
+        } else false
+        setStatus("Cut " + (if (succeeded) "succeeded" else "failed"))
+      }
+    })
+    val pasteButton = new Button(Action("Paste under") {
+      val pathToMoveTo = pretendFileTree.selection.paths.leadSelection
+      for (path <- pathToMoveTo; cut <- cutPath) {
+        val succeeded = pretendFileTree.model.move(cut, path, 0)
+        if (succeeded) cutPath = None
+        setStatus("Paste " + (if (succeeded) "succeeded" else "failed"))
+      }
+    })
+
     contents += editButton
     contents += updateButton
     contents += insertButton
     contents += insertBeforeButton
     contents += insertAfterButton
     contents += removeButton
+    contents += cutButton
+    contents += pasteButton
   }
 
   
@@ -274,6 +310,13 @@ object TreeDemo extends SimpleSwingApplication {
       def rename(str: String): Boolean = if (siblingExists(str)) false 
                                          else { nameVar = str; true }
 
+      def copy(): PretendFile = {
+        // no need to copy children, this is in fact a move, not a copy
+        val ret = PretendFile(nameVar, childBuffer: _*)
+        // but we need to notify them about a new parent
+        ret.childBuffer foreach (_.parent = Some(ret))
+        ret
+      }
       def insertChild(child: PretendFile, index: Int): Boolean = {
         if (!isDirectory) false
         else if (childExists(child.name)) false 

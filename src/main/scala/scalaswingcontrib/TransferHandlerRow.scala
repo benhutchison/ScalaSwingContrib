@@ -19,7 +19,7 @@ trait ClipboardCallbacks {
 }
 
 trait Reorderable {
-  def reorder(from: Int, to: Int)
+  def reorder(from: Int, to: Int): Unit
 }
 
 object RowTransferable {
@@ -42,7 +42,7 @@ abstract class TransferRowContainer[Table: ClassTag, DropLocation: ClassTag] {
   def isContainer(c: java.awt.Component): Boolean
   def container: Table
   def selectedRow: Int
-  def setCursor(cursor: Cursor)
+  def setCursor(cursor: Cursor): Unit
 
   def handleDrop(rowFrom: RowTransferable, dl: DropLocation): Boolean
 }
@@ -92,7 +92,7 @@ class TransferHandlerRow[Table: ClassTag, DropLocation: ClassTag](
     exportDone(comp, null, TransferHandler.NONE)
   }
 
-  protected override def exportDone(c: JComponent, t: Transferable, act: Int) {
+  protected override def exportDone(c: JComponent, t: Transferable, act: Int): Unit = {
     act match {
       case TransferHandler.MOVE =>
         container.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))

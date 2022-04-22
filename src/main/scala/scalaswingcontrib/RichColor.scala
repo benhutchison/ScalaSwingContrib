@@ -70,7 +70,7 @@ class RichColor(color: Color) {
 }
 object RichColor {
 
-  implicit def color2RichColor(c: Color) = new RichColor(c)
+  implicit def color2RichColor(c: Color): RichColor = new RichColor(c)
 
   def fromHSB(hue: Double, saturation: Double, brightness: Double): Color = {
     Color.getHSBColor(hue.toFloat, saturation.toFloat, brightness.toFloat)

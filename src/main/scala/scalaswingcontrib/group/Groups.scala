@@ -50,11 +50,11 @@ trait Groups
   }
   
   /** Implicit conversion that puts a group into the correct context on demand. */
-  protected final implicit def groupInSequential(grp: Group) =
+  protected final implicit def groupInSequential(grp: Group): GroupInSequential =
     new GroupInSequential(grp, None)
   
   /** Implicit conversion that puts a group into the correct context on demand. */
-  protected final implicit def groupInParallel(grp: Group) =
+  protected final implicit def groupInParallel(grp: Group): GroupInParallel =
     new GroupInParallel(grp, None)
       
   /**

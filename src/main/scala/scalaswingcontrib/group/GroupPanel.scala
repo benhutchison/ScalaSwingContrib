@@ -300,12 +300,12 @@ class GroupPanel extends Panel
   autoCreateContainerGaps = true
   
   /** Starting point for the horizontal layout. */
-  val theHorizontalLayout = new {
+  object theHorizontalLayout {
     def is(group: Group) = layout.setHorizontalGroup(group.buildChildren)
   }
   
   /** Starting point for the vertical layout. */
-  val theVerticalLayout = new {
+  object theVerticalLayout {
     def is(group: Group) = layout.setVerticalGroup(group.buildChildren)
   }  
 }

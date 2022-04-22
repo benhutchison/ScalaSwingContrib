@@ -292,7 +292,7 @@ class ExternalTreeModel[A: ClassTag](rootItems: collection.Seq[A], children: A =
    * This implementation of javax.swing.tree.TreeModel takes advantage of its abstract nature, so that it respects 
    * the tree shape of the underlying structure provided by the user.
    */
-  lazy val peer = new ExternalTreeModelPeer
+  lazy val peer: ExternalTreeModelPeer = new ExternalTreeModelPeer
    
 }
 

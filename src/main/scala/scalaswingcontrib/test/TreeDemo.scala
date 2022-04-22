@@ -21,7 +21,7 @@ object TreeDemo extends SimpleSwingApplication {
   // Use case 1: Show an XML document
   lazy val xmlTree = new Tree[Node] {
     model = TreeModel(xmlDoc)(_.child filterNot (_.text.trim.isEmpty))
-    renderer = Renderer(n => 
+    renderer = Renderer[Node, String]((n) =>
         if (n.label startsWith "#") n.text.trim 
         else n.label)
         
@@ -36,7 +36,7 @@ object TreeDemo extends SimpleSwingApplication {
       else Seq()
     }
     
-    renderer = Renderer.labeled { f =>
+    renderer = Renderer.labeled[File] { f =>
       val icon = if (f.isDirectory) folderIcon 
                  else fileIcon
       (icon, f.getName)
@@ -121,7 +121,7 @@ object TreeDemo extends SimpleSwingApplication {
       case TreeNodeSelected(node) => externalTreeStatusBar.text = "Selected: " + node
     }
     
-    renderer = Renderer.labeled { f =>
+    renderer = Renderer.labeled[PretendFile] { f =>
       val icon = if (f.isDirectory) folderIcon 
                  else fileIcon
       (icon, f.name)
@@ -312,7 +312,7 @@ object TreeDemo extends SimpleSwingApplication {
 
       def copy(): PretendFile = {
         // no need to copy children, this is in fact a move, not a copy
-        val ret = PretendFile(nameVar, childBuffer: _*)
+        val ret = PretendFile(nameVar, childBuffer.toSeq: _*)
         // but we need to notify them about a new parent
         ret.childBuffer foreach (_.parent = Some(ret))
         ret

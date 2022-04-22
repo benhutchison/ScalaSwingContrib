@@ -22,7 +22,7 @@ object TreeModel {
 trait TreeModel[A] {
   
   def roots: collection.Seq[A]
-  val peer: jst.TreeModel 
+  def peer: jst.TreeModel
   def getChildrenOf(parentPath: Path[A]): collection.Seq[A]
   def getChildPathsOf(parentPath: Path[A]): collection.Seq[Path[A]] = getChildrenOf(parentPath).map(parentPath :+ _)
   def filter(p: A => Boolean): TreeModel[A]

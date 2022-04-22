@@ -54,7 +54,7 @@ sealed trait TreeEditors extends EditableCellsCompanion {
      */
     def apply[A, B](toB: A => B, toA: B => A)(implicit editor: Editor[B]): Editor[A] = new Editor[A] {
     
-      override lazy val peer = new jst.TreeCellEditor {
+      override lazy val peer: jst.TreeCellEditor = new jst.TreeCellEditor {
 
         override def getTreeCellEditorComponent(tree: js.JTree, value: Any, isSelected: Boolean, 
                                                 isExpanded: Boolean, isLeaf: Boolean, row: Int) = {
@@ -73,7 +73,7 @@ sealed trait TreeEditors extends EditableCellsCompanion {
       
       listenToPeer(this.peer)
       
-      override def componentFor(tree: Tree[_], a: A, info: CellInfo): Component = {
+      override def componentFor(tree: Tree[_], a: A, info: companion.CellInfo): Component = {
         editor.componentFor(tree, toB(a), info)
       }
       
@@ -88,10 +88,10 @@ sealed trait TreeEditors extends EditableCellsCompanion {
    */
   abstract class Editor[A] extends CellEditor[A] {
     import Editor._
-    val companion = Editor
+    final val companion = Editor
     
     protected[tree] def getTreeWrapper(peerTree: js.JTree) = peerTree match {
-      case t: JTreeMixin[A] => t.treeWrapper
+      case t: JTreeMixin[A@unchecked] => t.treeWrapper
       case _ => throw new IllegalArgumentException(
           "This javax.swing.JTree does not mix in JTreeMixin, and so cannot be used by scala.swing.Tree#Editor")
     }
@@ -107,13 +107,13 @@ sealed trait TreeEditors extends EditableCellsCompanion {
     }
 
     private[this] lazy val lazyPeer: jst.TreeCellEditor = new TreeEditorPeer
-    def peer = lazyPeer // We can't use a lazy val directly, as Wrapped wouldn't be able to override with a non-lazy val.
+    override def peer: jst.TreeCellEditor = lazyPeer // We can't use a lazy val directly, as Wrapped wouldn't be able to override with a non-lazy val.
   }
 }
 
 
 sealed trait TreeRenderers extends RenderableCellsCompanion {
-  _: Tree.type =>
+  this: Tree.type =>
 
   protected override type Owner = Tree[_]
   
@@ -139,7 +139,7 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
     }
 
     def apply[A,B](f: A => B)(implicit renderer: Renderer[B]): Renderer[A] = new Renderer[A] {
-      def componentFor(tree: Tree[_], value: A, info: CellInfo): Component = {
+      def componentFor(tree: Tree[_], value: A, info: renderer.companion.CellInfo): Component = {
         renderer.componentFor(tree, f(value), info)
       }
     }
@@ -157,13 +157,13 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
    */
   trait Renderer[-A] extends CellRenderer[A] {
     import Renderer._
-    val companion = Renderer
+    final val companion = Renderer
     
     protected def dispatchToScalaRenderer(tree: js.JTree, value: AnyRef, selected: Boolean, expanded: Boolean, 
                                        leaf: Boolean, rowIndex: Int, focus: Boolean): js.JComponent = {
       
       def treeWrapper = tree match {
-        case t: JTreeMixin[A] => t.treeWrapper
+        case t: JTreeMixin[A@unchecked] => t.treeWrapper
         case _ => throw new IllegalArgumentException(
           "This javax.swing.JTree does not mix in JTreeMixin, and so cannot be used by scala.swing.Tree#Renderer")
       }
@@ -322,7 +322,7 @@ class Tree[A: ClassTag](private var treeDataModel: TreeModel[A])
   // cannot be a default argument value, because default argument value does not see the ClassTag evidence yet
   def this() = this(TreeModel.empty[A])
 
-  override val companion = Tree
+  override val companion: Tree.type = Tree
 
   override lazy val peer: js.JTree = new js.JTree(model.peer) with JTreeMixin[A] {
     def treeWrapper = thisTree
@@ -352,7 +352,7 @@ class Tree[A: ClassTag](private var treeDataModel: TreeModel[A])
    *  This lives in the Tree class rather than the companion object because it requires 
    *  an actual javax.swing.JTree instance to be initialised.
    */
-  implicit def genericEditor[B] = new Editor[B] {
+  implicit def genericEditor[B]: Editor[B] = new Editor[B] {
     // Get the current renderer if it passes for a DefaultTreeCellRenderer, or create a new one otherwise.
     def rendererIfDefault = if (renderer != null) {
       renderer.peer match {
@@ -496,11 +496,11 @@ class Tree[A: ClassTag](private var treeDataModel: TreeModel[A])
   def editable: Boolean      = peer.isEditable
   def editable_=(b: Boolean): Unit = { peer.setEditable(b) }
   
-  def editor: Editor[A] = Editor.wrap(peer.getCellEditor)
-  def editor_=(r: Tree.Editor[A]): Unit = { peer.setCellEditor(r.peer); editable = true }
+  def editor: companion.Editor[A] = companion.Editor.wrap[A](peer.getCellEditor)
+  def editor_=(r: companion.Editor[A]): Unit = { peer.setCellEditor(r.peer); editable = true }
   
-  def renderer: Renderer[A] = Renderer.wrap(peer.getCellRenderer)
-  def renderer_=(r: Tree.Renderer[A]): Unit = { peer.setCellRenderer(r.peer) }
+  def renderer: Renderer[A] = Renderer.wrap[A](peer.getCellRenderer)
+  def renderer_=(r: Renderer[A]): Unit = { peer.setCellRenderer(r.peer) }
   
   def showsRootHandles               = peer.getShowsRootHandles
   def showsRootHandles_=(b: Boolean): Unit = { peer.setShowsRootHandles(b) }

@@ -1,34 +1,37 @@
+import scala.math.Ordering.Implicits._
+
 name := "ScalaSwingContrib"
 
 organization := "com.github.benhutchison"
 
-version := "1.8"
+version := "1.9"
 
-scalaVersion := "2.13.1"
+scalaVersion := "3.1.2"
 
 sonatypeProfileName := "com.github.benhutchison"
 
 libraryDependencies ++= Seq(
-  "org.scala-lang.modules" %% "scala-swing" % "2.1.1",
-  "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
+  "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
+  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
 
-  "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.2",
+  "org.scala-lang.modules" %% "scala-collection-compat" % "2.7.0",
 
-  "org.specs2" %% "specs2-core" % "4.8.3" % "test",
-  "org.specs2" %% "specs2-junit" % "4.8.3" % "test",
+  "org.specs2" %% "specs2-core" % "4.15.0" % Test,
+  "org.specs2" %% "specs2-junit" % "4.15.0" % Test,
 
-  "junit" % "junit" % "4.7" % "test"
+  "junit" % "junit" % "4.7" % Test
 )
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.1")
+crossScalaVersions := Seq("2.12.15", "2.13.8", "3.1.2")
 
-unmanagedSourceDirectories in Compile += {
-  val sourceDir = (sourceDirectory in Compile).value
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
-    case _                       => sourceDir / "scala-2.13-"
+Compile / unmanagedSourceDirectories += {
+  val sourceDir = (Compile / sourceDirectory).value
+  if (CrossVersion.partialVersion(scalaVersion.value).exists(_ >= (2, 13))) {
+    sourceDir / "scala-2.13+"
+  } else {
+    sourceDir / "scala-2.13-"
   }
 }
 
@@ -48,11 +51,11 @@ publishTo := {
 //for local testing
 //publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
 
-publishArtifact in Test := false
+Test / publishArtifact := false
 
 pomIncludeRepository := { _ => false }
 
-pomExtra in Global := (
+Global / pomExtra := (
   <url>http://github.com/benhutchison/ScalaSwingContrib</url>
   <licenses>
     <license>

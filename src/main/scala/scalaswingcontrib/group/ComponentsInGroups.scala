@@ -14,7 +14,7 @@ trait ComponentsInGroups extends SizeTypes { this: GroupPanel =>
   /**
    * Implicit conversion that puts a component into the correct context on demand.
    */
-  protected final implicit def add[A <: G](comp: Component) =
+  protected final implicit def add[A <: G](comp: Component): ComponentInGroup[A] =
     new ComponentInGroup[A](comp)
   
   /** Triplet of minimum, preferred and maximum size. */

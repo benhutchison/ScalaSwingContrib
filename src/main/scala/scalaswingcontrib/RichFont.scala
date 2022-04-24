@@ -13,5 +13,5 @@ class RichFont(font: Font) {
 }
 object RichFont {
   
-  implicit def font2RichFont(f: Font) = new RichFont(f)
+  implicit def font2RichFont(f: Font): RichFont = new RichFont(f)
 }

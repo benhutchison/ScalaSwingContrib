@@ -58,7 +58,7 @@ trait CellView[+A] {
 * This should be mixed in to CellView implementations that support pluggable renderers.
 */
 trait RenderableCells[A] {
-  _: CellView[A] =>
+  this: CellView[A] with swing.Component =>
   val companion: RenderableCellsCompanion
   def renderer: companion.Renderer[A]
   def renderer_=(r: companion.Renderer[A]): Unit
@@ -68,7 +68,7 @@ trait RenderableCells[A] {
 * This should be mixed in to CellView implementations that support pluggable editors.
 */
 trait EditableCells[A]  {
-  _: CellView[A] =>
+  self: CellView[A] with swing.Component =>
   val companion: EditableCellsCompanion
   def editor: companion.Editor[A]
   def editor_=(r: companion.Editor[A]): Unit

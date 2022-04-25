@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
 
   "org.scala-lang.modules" %% "scala-collection-compat" % "2.7.0",
 
+  "com.sun.activation" % "javax.activation" % "1.2.0", // clipboard data handlers - deprecated in SDK in Java 9, removed later
+
   "org.specs2" %% "specs2-core" % "4.15.0" % Test,
   "org.specs2" %% "specs2-junit" % "4.15.0" % Test,
 

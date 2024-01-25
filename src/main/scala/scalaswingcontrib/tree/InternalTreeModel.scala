@@ -33,9 +33,11 @@ object InternalTreeModel {
 }
 
 
-class InternalTreeModel[A: ClassTag] private (val peer: PeerModel) extends TreeModel[A] {
+class InternalTreeModel[A: ClassTag] private (peerPar: PeerModel) extends TreeModel[A] {
   self =>
-    
+
+  lazy val peer: PeerModel = peerPar
+
   def this() = this(new PeerModel(new PeerNode(hiddenRoot)))
     
   def pathToTreePath(path: Path[A]): jst.TreePath = {
@@ -86,7 +88,7 @@ class InternalTreeModel[A: ClassTag] private (val peer: PeerModel) extends TreeM
 
   
   def map[B: ClassTag](f: A => B): InternalTreeModel[B] = new InternalTreeModel[B] {
-    override val peer = copyFromModel(self, f)
+    override lazy val peer = copyFromModel(self, f)
   }
 
   protected[tree] def copyFromModel[B](otherModel: TreeModel[B], f: B => A): jst.DefaultTreeModel = {

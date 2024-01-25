@@ -4,7 +4,7 @@ name := "ScalaSwingContrib"
 
 organization := "com.github.benhutchison"
 
-version := "1.9"
+version := "1.10-SNAPSHOT"
 
 scalaVersion := "3.3.1"
 

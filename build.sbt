@@ -4,29 +4,43 @@ name := "ScalaSwingContrib"
 
 organization := "com.github.benhutchison"
 
-version := "1.9"
+version := "1.10-SNAPSHOT"
 
-scalaVersion := "3.1.2"
+scalaVersion := "3.3.3"
+
+Global / onChangedBuildSource := ReloadOnSourceChanges
 
 sonatypeProfileName := "com.github.benhutchison"
 
 libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
-  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
+  "org.scala-lang.modules" %% "scala-xml" % "2.2.0",
 
-  "org.scala-lang.modules" %% "scala-collection-compat" % "2.7.0",
+  "org.scala-lang.modules" %% "scala-collection-compat" % "2.11.0",
 
   "com.sun.activation" % "javax.activation" % "1.2.0", // clipboard data handlers - deprecated in SDK in Java 9, removed later
 
-  "org.specs2" %% "specs2-core" % "4.15.0" % Test,
-  "org.specs2" %% "specs2-junit" % "4.15.0" % Test,
+  "org.specs2" %% "specs2-core" % "4.20.4" % Test,
+  "org.specs2" %% "specs2-junit" % "4.20.5" % Test,
 
-  "junit" % "junit" % "4.7" % Test
+  "junit" % "junit" % "4.13.2" % Test
 )
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-crossScalaVersions := Seq("2.12.15", "2.13.8", "3.1.2")
+scalacOptions ++= {
+  if (scalaVersion.value.startsWith("2.13")) Seq("-Xsource:3")
+  else if (scalaVersion.value.startsWith("3.")) Seq(
+    "-Wconf:msg=Alphanumeric method .* is not declared infix:s",
+    "-Wconf:msg=is no longer supported for vararg splices:s",
+    "-Wconf:msg=`_` is deprecated for wildcard arguments of types:s",
+    "-Wconf:msg=Ignoring \\[this\\] qualifier:s",
+    "-Wconf:msg=with as a type operator has been deprecated:s",
+    //"-Wconf:msg=The syntax `<function> _` is no longer supported:s",
+  ) else Seq()
+}
+
+crossScalaVersions := Seq("2.12.19", "2.13.13", "3.3.3", "3.4.1")
 
 Compile / unmanagedSourceDirectories += {
   val sourceDir = (Compile / sourceDirectory).value
@@ -37,7 +51,7 @@ Compile / unmanagedSourceDirectories += {
   }
 }
 
-// Following settings taken from: 
+// Following settings taken from:
 //https://github.com/sbt/sbt.github.com/blob/gen-master/src/jekyll/using_sonatype.md
 
 publishMavenStyle := true
@@ -82,4 +96,4 @@ Global / pomExtra := (
       <url>http://github.com:kenbot</url>
     </developer>
   </developers>)
-  
+

@@ -12,14 +12,14 @@ sonatypeProfileName := "com.github.benhutchison"
 
 libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
-  "org.scala-lang.modules" %% "scala-xml" % "2.1.0",
+  "org.scala-lang.modules" %% "scala-xml" % "2.2.0",
 
-  "org.scala-lang.modules" %% "scala-collection-compat" % "2.8.1",
+  "org.scala-lang.modules" %% "scala-collection-compat" % "2.11.0",
 
   "com.sun.activation" % "javax.activation" % "1.2.0", // clipboard data handlers - deprecated in SDK in Java 9, removed later
 
-  "org.specs2" %% "specs2-core" % "4.19.2" % Test,
-  "org.specs2" %% "specs2-junit" % "4.19.2" % Test,
+  "org.specs2" %% "specs2-core" % "4.20.4" % Test,
+  "org.specs2" %% "specs2-junit" % "4.20.5" % Test,
 
   "junit" % "junit" % "4.13.2" % Test
 )

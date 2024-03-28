@@ -28,7 +28,17 @@ libraryDependencies ++= Seq(
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-scalacOptions ++= {if (scalaVersion.value.startsWith("2.13")) Seq("-Xsource:3") else Seq()}
+scalacOptions ++= {
+  if (scalaVersion.value.startsWith("2.13")) Seq("-Xsource:3")
+  else if (scalaVersion.value.startsWith("3.")) Seq(
+    "-Wconf:msg=Alphanumeric method .* is not declared infix:s",
+    "-Wconf:msg=is no longer supported for vararg splices:s",
+    "-Wconf:msg=`_` is deprecated for wildcard arguments of types:s",
+    "-Wconf:msg=Ignoring \\[this\\] qualifier:s",
+    "-Wconf:msg=with as a type operator has been deprecated:s",
+    //"-Wconf:msg=The syntax `<function> _` is no longer supported:s",
+  ) else Seq()
+}
 
 crossScalaVersions := Seq("2.12.19", "2.13.13", "3.3.3", "3.4.1")
 

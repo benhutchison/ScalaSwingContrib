@@ -88,7 +88,7 @@ sealed trait TreeEditors extends EditableCellsCompanion {
    */
   abstract class Editor[A] extends CellEditor[A] {
     import Editor._
-    final val companion = Editor
+    final val companion: Editor.type = Editor
 
     protected[tree] def getTreeWrapper(peerTree: js.JTree) = peerTree match {
       case t: JTreeMixin[A@unchecked] => t.treeWrapper
@@ -157,7 +157,7 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
    */
   trait Renderer[-A] extends CellRenderer[A] {
     import Renderer._
-    final val companion = Renderer
+    final val companion: Renderer.type = Renderer
 
     protected def dispatchToScalaRenderer(tree: js.JTree, value: AnyRef, selected: Boolean, expanded: Boolean,
                                        leaf: Boolean, rowIndex: Int, focus: Boolean): js.JComponent = {

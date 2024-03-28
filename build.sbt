@@ -8,6 +8,8 @@ version := "1.10-SNAPSHOT"
 
 scalaVersion := "3.3.3"
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 sonatypeProfileName := "com.github.benhutchison"
 
 libraryDependencies ++= Seq(
@@ -26,7 +28,9 @@ libraryDependencies ++= Seq(
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-crossScalaVersions := Seq("2.12.19", "2.13.13", "3.3.3")
+scalacOptions ++= {if (scalaVersion.value.startsWith("2.13")) Seq("-Xsource:3") else Seq()}
+
+crossScalaVersions := Seq("2.12.19", "2.13.13", "3.3.3", "3.4.1")
 
 Compile / unmanagedSourceDirectories += {
   val sourceDir = (Compile / sourceDirectory).value

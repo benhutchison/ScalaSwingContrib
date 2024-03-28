@@ -98,7 +98,7 @@ sealed trait TreeEditors extends EditableCellsCompanion {
 
     protected class TreeEditorPeer extends EditorPeer with jst.TreeCellEditor {
       override def getTreeCellEditorComponent(tree: js.JTree, value: Any, selected: Boolean, expanded: Boolean,
-                                              leaf: Boolean, rowIndex: Int) = {
+                                              leaf: Boolean, rowIndex: Int): javax.swing.JComponent = {
         val treeWrapper = getTreeWrapper(tree)
         val a = treeWrapper.model unpackNode value
         componentFor(treeWrapper, a,
@@ -146,7 +146,9 @@ sealed trait TreeRenderers extends RenderableCellsCompanion {
 
     override def default[A] = new DefaultRenderer[A]
 
-    override def labeled[A](f: A => (js.Icon, String)) = new DefaultRenderer[A] with LabelRenderer[A] { val convert = f }
+    override def labeled[A](f: A => (js.Icon, String)): DefaultRenderer[A] = new DefaultRenderer[A] with LabelRenderer[A] {
+      val convert = f
+    }
   }
 
   /**
@@ -333,7 +335,7 @@ class Tree[A: ClassTag](private var treeDataModel: TreeModel[A])
     setRootVisible(false)
   }
 
-  protected def scrollablePeer = peer
+  protected def scrollablePeer: js.JTree = peer
 
   /**
    * Implicitly converts Tree.Path[A] lists to TreePath objects understood by the underlying peer JTree.

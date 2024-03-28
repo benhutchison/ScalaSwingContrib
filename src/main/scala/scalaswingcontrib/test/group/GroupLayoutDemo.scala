@@ -5,7 +5,7 @@ import scala.swing.{Button, SimpleSwingApplication, MainFrame, CheckBox, TextFie
 import scala.language.reflectiveCalls
 
 object GroupLayoutDemo extends SimpleSwingApplication {
-  override def top = new MainFrame {
+  override def top: MainFrame = new MainFrame {
     title = "Find"
 
     contents = new GroupPanel {
@@ -17,7 +17,7 @@ object GroupLayoutDemo extends SimpleSwingApplication {
       val backCheckBox = new CheckBox("Search backwards")
       val findButton = new Button("Find")
       val cancelButton = new Button("Cancel")
-      
+
       theHorizontalLayout is Sequential(
         label,
         Parallel(
@@ -30,9 +30,9 @@ object GroupLayoutDemo extends SimpleSwingApplication {
         Spring(Unrelated),
         Parallel(findButton, cancelButton)
       )
-      
+
       linkHorizontalSize(findButton, cancelButton)
-      
+
       theVerticalLayout is Sequential(
         Parallel(Baseline)(label, textField, findButton),
         Parallel(

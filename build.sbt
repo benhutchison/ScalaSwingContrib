@@ -6,7 +6,7 @@ organization := "com.github.benhutchison"
 
 version := "1.10-SNAPSHOT"
 
-scalaVersion := "3.3.1"
+scalaVersion := "3.3.3"
 
 sonatypeProfileName := "com.github.benhutchison"
 
@@ -26,7 +26,7 @@ libraryDependencies ++= Seq(
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-crossScalaVersions := Seq("2.12.18", "2.13.12", "3.3.1")
+crossScalaVersions := Seq("2.12.19", "2.13.13", "3.3.3")
 
 Compile / unmanagedSourceDirectories += {
   val sourceDir = (Compile / sourceDirectory).value
